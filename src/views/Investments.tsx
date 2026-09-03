@@ -1,6 +1,6 @@
 import { ASSET_META, allocation, expectedReturnPct, holdingValue, portfolioValue, riskScore, volatilityPct } from "../lib/portfolio";
 import { money, pct } from "../lib/money";
-import { useViewedProfile } from "../store/store";
+import { useSelector, useViewedProfile } from "../store/store";
 import { Bar, Empty, Hero, Label, PageHead, Row, Section } from "../components/ui";
 
 const TONE: Record<string, string> = {
@@ -14,6 +14,7 @@ const TONE: Record<string, string> = {
 
 export function Investments() {
   const p = useViewedProfile();
+  const read = useSelector((s) => s.marketRead);
   if (!p.holdings.length && !p.realAssets.length) {
     return <PageHead eyebrow="Investments" title="Nothing invested yet" sub="Add a holding, or ask the agent to read one off a statement." />;
   }
@@ -45,6 +46,31 @@ export function Investments() {
         <div className="vital r d6"><Label>Risk score</Label><div className={`v ${risk > 65 ? "warn" : ""}`}>{Math.round(risk)}</div><div className="n">concentration and volatility</div></div>
         <div className="vital r d7"><Label>Positions</Label><div className="v">{p.holdings.length}</div><div className="n">across {slices.length} asset classes</div></div>
       </div>
+
+      {read && (
+        <section className="section r d6">
+          <Label>What the agent read</Label>
+          <p style={{ marginTop: 14, lineHeight: 1.7 }}>{read.headline}</p>
+          <div style={{ marginTop: 18 }}>
+            {read.conditions.map((c, i) => (
+              <div className="row" key={i}>
+                <div className="t"><span>{c.label}</span></div>
+                <div className="a" style={{ color: c.changePct < 0 ? "var(--coral)" : "var(--jade)" }}>
+                  {c.changePct > 0 ? "+" : ""}{c.changePct}%
+                </div>
+                <div className="m">
+                  <span>{c.note}</span>
+                  {c.source && <span style={{ color: "var(--faint)" }}>{c.source}</span>}
+                </div>
+              </div>
+            ))}
+          </div>
+          <p className="note">
+            A what-if on today's holdings, not a forecast, and prices in the app are unchanged. The figures
+            come from the agent's own research — judge the sources before you act on it.
+          </p>
+        </section>
+      )}
 
       <Section title="Holdings" delay="d7">
         {!p.holdings.length && <Empty>No investable holdings.</Empty>}

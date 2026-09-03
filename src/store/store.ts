@@ -22,6 +22,7 @@ let state: AppState = {
   toolNames: [],
   webmcpStatus: "unsupported",
   handoff: null,
+  marketRead: null,
 };
 
 const listeners = new Set<() => void>();

@@ -139,4 +139,11 @@ export interface AppState {
   webmcpStatus: "unsupported" | "ready";
   /** Set when the current profile arrived via a shared handoff link. */
   handoff: { from: string; note: string; at: number } | null;
+  /** The market read the agent most recently brought back, kept on screen. */
+  marketRead: {
+    at: number;
+    conditions: Array<{ label: string; changePct: number; note: string; source?: string }>;
+    headline: string;
+    changePct: number;
+  } | null;
 }

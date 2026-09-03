@@ -209,8 +209,12 @@ Easy to forget, and all of these really occur:
   are defined, ~42 visible with the sample loaded. If you show a tool count, it
   moves.
 - **Tool groups:** `loan_*` (8), `portfolio_*` (9), `budget_*` (9),
-  `advisor_*` (19). 26 read, 17 write, 2 propose. 45 defined; ~42 visible at
-  any moment because of gating.
+  `advisor_*` (19), `market_*` (3). 48 defined; ~45 visible at any moment
+  because of gating.
+- **Market research needs a surface.** The agent researches live news for the
+  user's actual exposures and feeds the findings back; the resulting read
+  (per asset class: a move, a note, a source) appears on Investments and
+  wants a proper design — it is agent-sourced, so provenance matters.
 - **While a branch is open the agent always works in the branch**, whichever
   workspace you happen to be viewing. It cannot see your navigation, so tying
   its scope to the current page would give it the wrong context the moment you

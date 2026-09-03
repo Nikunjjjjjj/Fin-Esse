@@ -21,9 +21,9 @@ beforeEach(() => {
 });
 
 describe("tool catalogue", () => {
-  it("exposes the four documented groups", () => {
+  it("exposes the five documented groups", () => {
     const prefixes = new Set(ALL_TOOLS.map((t) => t.name.split("_")[0]));
-    expect(prefixes).toEqual(new Set(["loan", "portfolio", "budget", "advisor"]));
+    expect(prefixes).toEqual(new Set(["loan", "portfolio", "budget", "advisor", "market"]));
   });
 
   it("has unique names", () => {

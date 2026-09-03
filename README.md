@@ -118,7 +118,7 @@ link degrades into a boring profile rather than a broken app.
 
 ## Tool reference
 
-42 tools in four groups. Prefixes are organisational — there is one agent.
+45 tools in five groups. Prefixes are organisational — there is one agent.
 
 ### `loan_*`
 `list` · `add`* · `remove`* · `emi_calculator` · `amortisation` ·
@@ -135,6 +135,23 @@ _* requires human approval before it changes anything._
 `summary` · `set_income`* · `set_cash_reserve`* · `add_expense`* ·
 `remove_expense`* · `add_goal`* · `remove_goal`* · `goal_feasibility` ·
 `set_expected_return`
+
+### `market_*`
+`research_brief` · `apply_conditions` · `last_read`
+
+The page holds **no market data and fetches nothing**. `market_research_brief`
+reads the user's holdings and tells the agent exactly what to look up, ranked
+by how much each exposure actually matters — and what to ignore.
+The agent searches the live web itself, then feeds what it found back through
+`market_apply_conditions`, which computes the effect on every aspect of this
+particular position: value per holding, allocation, risk, volatility, expected
+return, net worth, goal funding, and whether the prepay-versus-invest verdict
+flips. It deliberately also reports **what did not move** — debt, surplus and
+runway are untouched by prices, which is exactly what someone reading a crash
+headline needs to hear.
+
+No API key, no rate limit, no live network dependency in the page, and only
+asset-class names ever leave the browser as search terms. Positions never do.
 
 ### `advisor_*` — cross-domain
 `net_position` · `prepay_vs_invest` · `risk_exposure` · `stress_test` ·
@@ -189,7 +206,7 @@ header names which one is live.
 ```bash
 npm install
 npm run dev        # http://localhost:5173
-npm test           # 94 tests
+npm test           # 119 tests
 npm run build
 ```
 

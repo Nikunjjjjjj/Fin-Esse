@@ -6,6 +6,7 @@ import { budgetTools } from "./tools.budget";
 import { loanTools } from "./tools.loan";
 import { portfolioTools } from "./tools.portfolio";
 import { handoffTools } from "./tools.handoff";
+import { marketTools } from "./tools.market";
 
 /**
  * Tools that are always available, versus tools that only make sense once the
@@ -38,6 +39,7 @@ const ALWAYS: ReadonlySet<string> = new Set([
   "advisor_load_handoff_link",
   "advisor_list_stances",
   "advisor_shared_position_info",
+  "market_last_read",
 ]);
 
 const ALL_TOOLS: ToolSpec[] = [
@@ -46,6 +48,7 @@ const ALL_TOOLS: ToolSpec[] = [
   ...budgetTools,
   ...advisorTools,
   ...handoffTools,
+  ...marketTools,
 ];
 
 function shouldRegister(name: string): boolean {
@@ -93,6 +96,11 @@ function shouldRegister(name: string): boolean {
     case "advisor_second_opinion":
     case "advisor_argue_as":
       return hasLoans || hasHoldings;
+
+    // Researching a portfolio nobody holds wastes the agent's search budget.
+    case "market_research_brief":
+    case "market_apply_conditions":
+      return hasHoldings;
     case "advisor_stress_test":
       return hasLoans || hasHoldings;
     case "advisor_explain_number":
