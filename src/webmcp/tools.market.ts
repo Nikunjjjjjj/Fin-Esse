@@ -24,7 +24,7 @@ export const marketTools: ToolSpec[] = [
         )
         .join("\n");
       return result(
-        `${b.instruction}\n\n${lines}\n\nNot held, so do not spend time on it: ${b.ignore.join(", ") || "nothing"}.\n\n${b.note}`,
+        `${b.instruction}\n\n${lines}\n\nNot held, so do not spend time on it: ${b.ignore.join(", ") || "nothing"}.\n\n${b.note}\n\nIMPORTANT: this brief on its own changes nothing the user can see. After you have searched, you MUST call market_apply_conditions with what you found — that is what computes the effect on their actual holdings and puts the reading on their screen. Do not answer from general market knowledge instead.`,
         b,
       );
     },

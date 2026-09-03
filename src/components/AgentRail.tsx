@@ -65,6 +65,8 @@ export function AgentRail() {
         ))}
       </div>
 
+      <MarketRead />
+
       <div className="r d5">
         <Label>Agent activity</Label>
         {!activity.length && <div style={{ marginTop: 14 }}><Empty>Tool calls appear here as they happen.</Empty></div>}
@@ -82,6 +84,35 @@ export function AgentRail() {
         </div>
       </div>
     </aside>
+  );
+}
+
+/**
+ * A market read is global, not a property of the Investments page — someone
+ * who asked "what is happening out there" should see the answer wherever they
+ * happen to be standing.
+ */
+function MarketRead() {
+  const read = useSelector((s) => s.marketRead);
+  if (!read) return null;
+  const age = Math.round((Date.now() - read.at) / 60000);
+  return (
+    <div className="r d4">
+      <Label>Market read · {age === 0 ? "just now" : `${age} min ago`}</Label>
+      <div style={{ marginTop: 14 }}>
+        {read.conditions.map((c, i) => (
+          <div className="kv" key={i}>
+            <span title={c.note}>{c.label}</span>
+            <span style={{ color: c.changePct < 0 ? "var(--coral)" : "var(--jade)" }}>
+              {c.changePct > 0 ? "+" : ""}{c.changePct}%
+            </span>
+          </div>
+        ))}
+      </div>
+      <p style={{ fontSize: 12.5, color: "var(--muted)", marginTop: 12, lineHeight: 1.6 }}>
+        Portfolio {read.changePct > 0 ? "+" : ""}{read.changePct}% on these readings. Detail on Investments.
+      </p>
+    </div>
   );
 }
 
