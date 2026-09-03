@@ -23,6 +23,7 @@ const ALWAYS: ReadonlySet<string> = new Set([
   "loan_compare_offers",
   "portfolio_list",
   "portfolio_add_holding",
+  "portfolio_add_real_asset",
   "budget_summary",
   "budget_set_income",
   "budget_set_cash_reserve",

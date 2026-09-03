@@ -146,3 +146,28 @@ describe("budget", () => {
     expect(emergencyRunwayMonths(p)).toBeLessThan(12);
   });
 });
+
+describe("real assets", () => {
+  it("counts a self-occupied home in net worth", () => {
+    const np = netPosition(p);
+    expect(np.realAssetValue).toBe(9_500_000);
+    expect(np.totalAssets).toBeCloseTo(np.portfolioValue + np.realAssetValue + np.cashReserve, 0);
+  });
+
+  it("excludes it from portfolio allocation and risk", () => {
+    const slices = allocation(p.holdings);
+    expect(slices.some((s) => s.assetClass === "real_estate")).toBe(false);
+    expect(portfolioValue(p.holdings)).toBeLessThan(netPosition(p).totalAssets);
+  });
+
+  it("still marks property down in a broad crash", () => {
+    const r = stressTest(p, { marketShock: "equity_crash" });
+    expect(r.realAssetAfter).toBeLessThan(9_500_000);
+    expect(r.findings.some((f) => f.includes("Property"))).toBe(true);
+  });
+
+  it("keeps a profile with no property consistent", () => {
+    const r = stressTest({ ...p, realAssets: [] }, {});
+    expect(r.netWorthChange).toBeCloseTo(0, 0);
+  });
+});

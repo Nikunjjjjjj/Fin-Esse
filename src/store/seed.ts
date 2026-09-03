@@ -5,6 +5,7 @@ export function emptyProfile(): Profile {
     currency: "INR",
     loans: [],
     holdings: [],
+    realAssets: [],
     budget: { monthlyIncome: 0, expenses: [], cashReserve: 0 },
     goals: [],
     expectedPortfolioReturnPct: 11,
@@ -48,6 +49,9 @@ export function demoProfile(): Profile {
         monthsPaid: 3,
       },
     ],
+    // The asset the home loan actually bought. Carrying the liability without
+    // the asset would make net worth meaningless.
+    realAssets: [{ id: "ra_flat", name: "Sector 62 flat (self-occupied)", value: 9_500_000 }],
     holdings: [
       { id: "h_nifty", symbol: "NIFTYBEES", name: "Nifty 50 index ETF", assetClass: "equity", units: 900, price: 285 },
       { id: "h_flexi", symbol: "PPFAS", name: "Parag Parikh Flexi Cap", assetClass: "equity", units: 3200, price: 82 },

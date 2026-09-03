@@ -24,12 +24,12 @@ export const advisorTools: ToolSpec[] = [
     name: "advisor_net_position",
     effect: "read",
     description:
-      "Give the whole balance sheet at once: portfolio value, cash, total debt, net worth, debt-to-assets, monthly EMI and monthly surplus. The fastest way to orient yourself before answering any cross-domain question.",
+      "Give the whole balance sheet at once: investable portfolio, non-investable real assets such as a home, cash, total debt, net worth, debt-to-assets, monthly EMI and monthly surplus. The fastest way to orient yourself before answering any cross-domain question.",
     inputSchema: S.obj({}),
     execute: () => {
       const np = netPosition(getProfile());
       return result(
-        `Assets ${money(np.totalAssets)} (portfolio ${money(np.portfolioValue)} + cash ${money(np.cashReserve)}) against debt ${money(np.totalDebt)}, so net worth is ${money(np.netWorth)}. Debt is ${Number.isFinite(np.debtToAssetPct) ? pct(np.debtToAssetPct) : "infinite%"} of assets. EMIs ${money(np.monthlyEmi)}/mo, surplus ${money(np.monthlySurplus)}/mo.`,
+        `Assets ${money(np.totalAssets)} (investable portfolio ${money(np.portfolioValue)}${np.realAssetValue > 0 ? ` + property ${money(np.realAssetValue)}` : ""} + cash ${money(np.cashReserve)}) against debt ${money(np.totalDebt)}, so net worth is ${money(np.netWorth)}. Debt is ${Number.isFinite(np.debtToAssetPct) ? pct(np.debtToAssetPct) : "infinite%"} of assets. EMIs ${money(np.monthlyEmi)}/mo, surplus ${money(np.monthlySurplus)}/mo.`,
         np,
       );
     },
@@ -253,7 +253,7 @@ export const advisorTools: ToolSpec[] = [
       switch (i.figure) {
         case "net_worth":
           return result(
-            `Net worth = portfolio ${money(np.portfolioValue)} + cash ${money(np.cashReserve)} - debt ${money(np.totalDebt)} = ${money(np.netWorth)}. Portfolio value is the sum of units x price across ${p.holdings.length} holdings; debt is the outstanding balance on ${p.loans.length} loans after the EMIs already paid.`,
+            `Net worth = investable portfolio ${money(np.portfolioValue)} + property ${money(np.realAssetValue)} + cash ${money(np.cashReserve)} - debt ${money(np.totalDebt)} = ${money(np.netWorth)}. Portfolio value is the sum of units x price across ${p.holdings.length} holdings; property covers ${p.realAssets.length} non-investable asset(s) such as a self-occupied home, which count towards net worth but are excluded from allocation and rebalancing; debt is the outstanding balance on ${p.loans.length} loans after the EMIs already paid.`,
             np,
           );
         case "surplus":

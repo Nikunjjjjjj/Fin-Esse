@@ -55,10 +55,23 @@ export interface Goal {
   savedSoFar: number;
 }
 
+/**
+ * An asset that counts towards net worth but is not investable -- a
+ * self-occupied home being the usual case. Keeping these out of `holdings`
+ * stops a house from dominating portfolio allocation and stops the advisor
+ * from suggesting you "rebalance" out of the roof over your head.
+ */
+export interface RealAsset {
+  id: string;
+  name: string;
+  value: number;
+}
+
 export interface Profile {
   currency: string;
   loans: Loan[];
   holdings: Holding[];
+  realAssets: RealAsset[];
   budget: Budget;
   goals: Goal[];
   /** Long-run assumed nominal return used by advisor tradeoff math, percent p.a. */

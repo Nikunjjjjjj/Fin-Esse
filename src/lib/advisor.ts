@@ -1,8 +1,9 @@
 import type { Loan, Profile } from "../types";
 import { monthlyRate, snapshot, totalOutstanding } from "./loan";
-import { round2 } from "./money";
+import { money, round2 } from "./money";
 import {
   ASSET_META,
+  SHOCKS,
   expectedReturnPct,
   portfolioValue,
   riskScore,
@@ -166,6 +167,7 @@ export function prepayVsInvest(
 
 export interface NetPosition {
   portfolioValue: number;
+  realAssetValue: number;
   cashReserve: number;
   totalAssets: number;
   totalDebt: number;
@@ -177,12 +179,14 @@ export interface NetPosition {
 
 export function netPosition(profile: Profile): NetPosition {
   const pv = portfolioValue(profile.holdings);
+  const real = round2(profile.realAssets.reduce((s, a) => s + a.value, 0));
   const cash = profile.budget.cashReserve;
   const debt = totalOutstanding(profile.loans);
-  const assets = round2(pv + cash);
+  const assets = round2(pv + real + cash);
   const cf = cashflow(profile.budget, profile.loans);
   return {
     portfolioValue: pv,
+    realAssetValue: real,
     cashReserve: cash,
     totalAssets: assets,
     totalDebt: debt,
@@ -317,6 +321,7 @@ export interface StressResult {
   netWorthAfter: number;
   netWorthChange: number;
   portfolioAfter: number;
+  realAssetAfter: number;
   cashAfter: number;
   monthsSurvivable: number;
   emiAfter: number;
@@ -331,12 +336,22 @@ export function stressTest(profile: Profile, scenario: StressScenario): StressRe
   const findings: string[] = [];
 
   let portfolioAfter = before.portfolioValue;
+  let realAfter = before.realAssetValue;
   if (scenario.marketShock) {
     const s = simulateShock(profile.holdings, scenario.marketShock);
     portfolioAfter = s.valueAfter;
+    // Property is not investable, but it is not immune either: a broad
+    // downturn marks it down alongside everything else.
+    const propertyMove = SHOCKS[scenario.marketShock].moves.real_estate ?? 0;
+    realAfter = round2(before.realAssetValue * (1 + propertyMove / 100));
     findings.push(
-      `${s.label} takes the portfolio from ${s.valueBefore} to ${s.valueAfter} (${s.changePct}%).`,
+      `${SHOCKS[scenario.marketShock].label} takes the investable portfolio from ${money(s.valueBefore)} to ${money(s.valueAfter)} (${s.changePct}%).`,
     );
+    if (propertyMove !== 0 && before.realAssetValue > 0) {
+      findings.push(
+        `Property is marked ${propertyMove}% to ${money(realAfter)}, though it cannot be sold quickly to raise cash.`,
+      );
+    }
   }
 
   let emiAfter = cf.totalEmi;
@@ -349,7 +364,7 @@ export function stressTest(profile: Profile, scenario: StressScenario): StressRe
       bumped.reduce((s, l) => (l.monthsPaid < l.termMonths ? s + snapshot(l).emi : s), 0),
     );
     findings.push(
-      `A ${scenario.rateHikeBps}bps rate rise lifts total EMIs from ${cf.totalEmi} to ${emiAfter} (+${round2(emiAfter - cf.totalEmi)}/mo).`,
+      `A ${scenario.rateHikeBps}bps rate rise lifts total EMIs from ${money(cf.totalEmi)} to ${money(emiAfter)} (+${money(emiAfter - cf.totalEmi)}/mo).`,
     );
   }
 
@@ -359,7 +374,7 @@ export function stressTest(profile: Profile, scenario: StressScenario): StressRe
   if (jobLoss > 0) {
     cashAfter = round2(profile.budget.cashReserve - burn * jobLoss);
     findings.push(
-      `${jobLoss} months without income burns ${round2(burn * jobLoss)} of the ${profile.budget.cashReserve} cash reserve.`,
+      `${jobLoss} months without income burns ${money(burn * jobLoss)} of the ${money(profile.budget.cashReserve)} cash reserve.`,
     );
   }
 
@@ -367,11 +382,11 @@ export function stressTest(profile: Profile, scenario: StressScenario): StressRe
   const forcedSale = cashAfter < 0;
   if (forcedSale) {
     findings.push(
-      `Cash runs out after ${monthsSurvivable} months — covering the remainder means selling ${round2(-cashAfter)} of a portfolio that is simultaneously down.`,
+      `Cash runs out after ${monthsSurvivable} months — covering the remainder means selling ${money(-cashAfter)} of a portfolio that is simultaneously down.`,
     );
   }
 
-  const assetsAfter = round2(portfolioAfter + Math.max(0, cashAfter));
+  const assetsAfter = round2(portfolioAfter + realAfter + Math.max(0, cashAfter));
   const netAfter = round2(assetsAfter - before.totalDebt + Math.min(0, cashAfter));
 
   return {
@@ -387,6 +402,7 @@ export function stressTest(profile: Profile, scenario: StressScenario): StressRe
     netWorthAfter: netAfter,
     netWorthChange: round2(netAfter - before.netWorth),
     portfolioAfter,
+    realAssetAfter: realAfter,
     cashAfter,
     monthsSurvivable,
     emiAfter,
@@ -423,10 +439,10 @@ export function recommendations(profile: Profile): Recommendation[] {
       id: "kill_expensive_debt",
       priority: 1,
       title: `Clear "${expensive.name}" before anything else`,
-      action: `Direct surplus cash at the ${expensive.annualRatePct}% balance of ${s.outstanding}.`,
+      action: `Direct surplus cash at the ${expensive.annualRatePct}% balance of ${money(s.outstanding, profile.currency)}.`,
       why: `At ${expensive.annualRatePct}% this debt costs far more than the ${profile.expectedPortfolioReturnPct}% the portfolio is assumed to earn. Every rupee against it is a guaranteed ${expensive.annualRatePct}% return.`,
       evidence: ["loan_list", "advisor_prepay_vs_invest"],
-      impact: `Removes ${s.interestRemaining} of scheduled interest and ${round2(s.emi)}/mo of committed outflow.`,
+      impact: `Removes ${money(s.interestRemaining, profile.currency)} of scheduled interest and ${money(s.emi, profile.currency)}/mo of committed outflow.`,
     });
   }
 
@@ -435,8 +451,8 @@ export function recommendations(profile: Profile): Recommendation[] {
       id: "build_runway",
       priority: expensive && expensive.annualRatePct > 25 ? 2 : 1,
       title: "Rebuild the emergency buffer to six months",
-      action: `Hold ${round2((6 - runway) * (cf.essentialExpenses + cf.totalEmi))} more in liquid cash.`,
-      why: `Only ${runway} months of essentials and EMIs are covered. With ${cf.emiToIncomePct}% of income already committed to debt service, a job gap forces selling investments at the worst moment.`,
+      action: `Hold ${money((6 - runway) * (cf.essentialExpenses + cf.totalEmi), profile.currency)} more in liquid cash.`,
+      why: `Only ${runway.toFixed(1)} months of essentials and EMIs are covered. With ${cf.emiToIncomePct}% of income already committed to debt service, a job gap forces selling investments at the worst moment.`,
       evidence: ["budget_cashflow", "loan_list", "advisor_stress_test"],
       impact: "Converts a forced-sale scenario into a survivable one.",
     });
@@ -477,7 +493,7 @@ export function recommendations(profile: Profile): Recommendation[] {
       id: "raise_savings",
       priority: 4,
       title: "Lift the savings rate above 15%",
-      action: `Discretionary spending is ${cf.discretionaryExpenses}/mo; redirecting a third of it adds ${round2(cf.discretionaryExpenses / 3)}/mo.`,
+      action: `Discretionary spending is ${money(cf.discretionaryExpenses, profile.currency)}/mo; redirecting a third of it adds ${money(cf.discretionaryExpenses / 3, profile.currency)}/mo.`,
       why: `Current savings rate is ${cf.savingsRatePct}%, which leaves little room to fund goals and absorb shocks simultaneously.`,
       evidence: ["budget_cashflow", "budget_goal_feasibility"],
       impact: "Directly increases the cash available for both debt and goals.",

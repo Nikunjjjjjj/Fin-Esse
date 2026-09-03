@@ -1,6 +1,6 @@
 import type { Budget, Goal, Loan, Profile } from "../types";
 import { totalMonthlyEmi } from "./loan";
-import { round2 } from "./money";
+import { money, pct, round2 } from "./money";
 
 export interface CashflowSummary {
   monthlyIncome: number;
@@ -95,8 +95,8 @@ export function assessGoal(
   let verdict: string;
   if (need <= 0) verdict = "Already funded by existing savings and growth.";
   else if (surplus <= 0) verdict = "No monthly surplus available — this goal cannot be funded from cashflow today.";
-  else if (need > surplus) verdict = `Needs ${round2(need)}/mo but only ${round2(surplus)}/mo is free — short by ${round2(need - surplus)}/mo.`;
-  else verdict = `Fundable: needs ${round2((need / surplus) * 100)}% of the current monthly surplus.`;
+  else if (need > surplus) verdict = `Needs ${money(need)}/mo but only ${money(surplus)}/mo is free — short by ${money(need - surplus)}/mo.`;
+  else verdict = `Fundable: needs ${pct((need / surplus) * 100)} of the current monthly surplus.`;
 
   return {
     id: goal.id,
@@ -132,10 +132,10 @@ export function assessAllGoals(profile: Profile): {
     surplus: cf.surplus,
     feasible,
     note: feasible
-      ? `All goals fit inside the ${round2(cf.surplus)}/mo surplus, using ${
-          cf.surplus > 0 ? round2((totalRequired / cf.surplus) * 100) : 0
-        }% of it.`
-      : `Goals collectively need ${totalRequired}/mo against a ${cf.surplus}/mo surplus — a gap of ${round2(
+      ? `All goals fit inside the ${money(cf.surplus)}/mo surplus, using ${
+          cf.surplus > 0 ? pct((totalRequired / cf.surplus) * 100) : "0%"
+        } of it.`
+      : `Goals collectively need ${money(totalRequired)}/mo against a ${money(cf.surplus)}/mo surplus — a gap of ${money(
           totalRequired - cf.surplus,
         )}/mo. Something has to give: timeline, target, or spending.`,
   };

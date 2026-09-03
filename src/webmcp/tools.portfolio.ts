@@ -227,6 +227,26 @@ export const portfolioTools: ToolSpec[] = [
     },
   },
   {
+    name: "portfolio_add_real_asset",
+    effect: "write",
+    description:
+      "Record a non-investable asset such as a self-occupied home. It counts towards net worth but is deliberately excluded from allocation, rebalancing and concentration risk, because you cannot sell a third of the house you live in. Use this when the user mentions property they own.",
+    inputSchema: S.obj(
+      { name: S.str("What the asset is."), value: S.num("Current market value.") },
+      ["name", "value"],
+    ),
+    execute: (i) => {
+      const value = requireNumber(i.value, "value");
+      if (value <= 0) throw new Error("Value must be positive.");
+      const asset = { id: uid("ra"), name: String(i.name), value };
+      updateProfile((p) => ({ ...p, realAssets: [...p.realAssets, asset] }));
+      return result(
+        `Recorded "${asset.name}" at ${money(value)}. It now counts towards net worth but is excluded from portfolio allocation and rebalancing.`,
+        { realAsset: asset },
+      );
+    },
+  },
+  {
     name: "portfolio_update_price",
     effect: "write",
     description: "Update the current price of a holding, for example to reflect a live quote the user gives you.",
