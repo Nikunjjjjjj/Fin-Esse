@@ -1,0 +1,39 @@
+{
+ "artboards": [
+  {
+   "file": "Main.dc.html",
+   "x": 0,
+   "y": 0,
+   "w": 1280,
+   "h": 900,
+   "title": "Overview — Private Bank v2"
+  },
+  {
+   "file": "Identity.dc.html",
+   "x": 1410,
+   "y": 0,
+   "w": 1280,
+   "h": 900,
+   "title": "Logo & palette"
+  }
+ ],
+ "annotations": [
+  {
+   "id": "motion",
+   "x": 0,
+   "y": -250,
+   "w": 700,
+   "text": "Reload the canvas to watch the entrance — it runs once.\n\nMotion, in order: header, then the figure with a single gold sheen across it, then the bars drawing out from the left, then the four vitals staggered 70ms apart, then the agent log. Expo-out easing over 0.7s is what makes it read considered rather than bouncy.\n\nOngoing: the approval card breathes very slightly, cards lift on hover, nav underlines slide. All of it switches off under prefers-reduced-motion."
+  },
+  {
+   "id": "logo",
+   "x": 1410,
+   "y": -250,
+   "w": 560,
+   "text": "Four marks at three sizes each. 01 is placed in the app — tell me if you want a different one and it is a one-line swap.\n\nThe wordmark is now 31px against the old 21px, with the mark at 36px beside it."
+  }
+ ],
+ "launch": {
+  "view": "canvas"
+ }
+}

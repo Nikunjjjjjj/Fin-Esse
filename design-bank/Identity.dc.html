@@ -1,0 +1,244 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,300;6..72,400;6..72,500&amp;family=Jost:wght@300;400;500&amp;display=swap">
+  <style>
+    body { margin:0; background:#08090C; color:#F1EFEA;
+      font-family:'Jost','Helvetica Neue',Arial,sans-serif;
+      -webkit-font-smoothing:antialiased; }
+    * { box-sizing:border-box; }
+    a { color:#E8C56A; text-decoration:none; } a:hover { color:#F1EFEA; }
+
+    .fig { font-family:'Newsreader',Georgia,serif; font-variant-numeric:tabular-nums;
+      font-weight:400; letter-spacing:-.012em; }
+    .lbl { font-size:10px; letter-spacing:.2em; text-transform:uppercase;
+      color:#565E6C; font-weight:500; }
+
+    /* Staggered entrance. Expo-out over a long-ish duration is what makes
+       motion read as considered rather than bouncy. */
+    @keyframes rise { from { opacity:0; transform:translateY(14px); }
+                       to   { opacity:1; transform:none; } }
+    .r { animation:rise .72s cubic-bezier(.22,1,.36,1) both; }
+    .d1{animation-delay:.05s} .d2{animation-delay:.12s} .d3{animation-delay:.19s}
+    .d4{animation-delay:.26s} .d5{animation-delay:.33s} .d6{animation-delay:.40s}
+    .d7{animation-delay:.47s} .d8{animation-delay:.54s}
+
+    /* One slow sheen across the headline figure, then never again.
+       The gradient is three times the element and ink at both ends, so some
+       part of it always covers the text -- clipping to transparent text with a
+       gradient that can sweep off the element makes the figure disappear. */
+    @keyframes sheen { 0%,45% { background-position:100% 0; }
+                        100%   { background-position:0% 0; } }
+    .sheen { background-image:linear-gradient(100deg,
+        #F1EFEA 0%, #F1EFEA 40%, #E8C56A 50%, #F1EFEA 60%, #F1EFEA 100%);
+      background-size:300% 100%; background-position:0% 0;
+      -webkit-background-clip:text; background-clip:text; color:transparent;
+      animation:sheen 2.4s cubic-bezier(.22,1,.36,1) .5s 1 both; }
+
+    /* Bars draw themselves out from the left. */
+    @keyframes grow { from { transform:scaleX(0); } to { transform:scaleX(1); } }
+    .bar > i { display:block; height:100%; transform-origin:left center;
+      animation:grow .95s cubic-bezier(.22,1,.36,1) .5s both; }
+
+    /* The one thing asking for a decision breathes, very slightly. */
+    @keyframes halo { 0%,100% { box-shadow:0 0 0 0 rgba(224,112,92,.00); }
+                       50%     { box-shadow:0 0 0 5px rgba(224,112,92,.07); } }
+    .ask { animation:halo 3.6s ease-in-out 1.4s infinite; }
+
+    /* Hover: lift and warm the edge. Cheap, and it makes the page feel alive. */
+    .lift { transition:transform .45s cubic-bezier(.22,1,.36,1), border-color .45s cubic-bezier(.22,1,.36,1),
+      background .45s cubic-bezier(.22,1,.36,1); }
+    .lift:hover { transform:translateY(-3px); border-color:#323945; }
+
+    .navi { position:relative; transition:color .35s cubic-bezier(.22,1,.36,1); }
+    .navi::after { content:''; position:absolute; left:0; right:0; bottom:-21px; height:1px;
+      background:#E8C56A; transform:scaleX(0); transform-origin:left;
+      transition:transform .5s cubic-bezier(.22,1,.36,1); }
+    .navi:hover { color:#F1EFEA; } .navi:hover::after { transform:scaleX(1); }
+    .navi.on { color:#F1EFEA; } .navi.on::after { transform:scaleX(1); }
+
+    .btn { transition:transform .35s cubic-bezier(.22,1,.36,1), filter .35s cubic-bezier(.22,1,.36,1); }
+    .btn:hover { transform:translateY(-1px); filter:brightness(1.08); }
+
+    @media (prefers-reduced-motion:reduce) {
+      .r,.bar > i,.sheen,.ask { animation:none; opacity:1; transform:none; }
+      .sheen { color:#F1EFEA; background-image:none; }
+    }
+  </style>
+</helmet>
+<div style="width:1280px; min-height:900px; background:#08090C; padding:48px;">
+  <div class="r d1" style="display:flex; align-items:center; gap:13px;">
+    <svg width="36" height="36" viewBox="0 0 32 32" fill="none" style="flex:none; display:block;">
+      <path d="M16 3 A13 13 0 0 0 16 29 Z" fill="#E8C56A"/>
+      <path d="M16 3 A13 13 0 0 1 16 29" stroke="#F1EFEA" stroke-width="1.6" fill="none"/>
+      <circle cx="16" cy="16" r="2.4" fill="#08090C"/>
+    </svg><div class="fig" style="font-size:31px;">Fin<span style="color:#E8C56A;">·</span>Esse</div>
+  </div>
+  <div class="r d2" style="font-size:14px; color:#8D94A2; margin-top:14px; max-width:64ch; line-height:1.7;">Four marks, each shown at 64, 26 and 16 pixels — a logo that only works large is not a logo. Mark 01 is the one placed in the app.</div>
+
+  <div style="display:grid; grid-template-columns:repeat(2,1fr); gap:22px; margin-top:34px;">
+    <div class="r d3 lift" style="border:1px solid #242A34; background:#101319; padding:26px;">
+        <div style="display:flex; align-items:center; gap:18px; height:72px;"><svg width="64" height="64" viewBox="0 0 32 32" fill="none">
+      <path d="M16 3 A13 13 0 0 0 16 29 Z" fill="#E8C56A"/>
+      <path d="M16 3 A13 13 0 0 1 16 29" stroke="#F1EFEA" stroke-width="1.6" fill="none"/>
+      <circle cx="16" cy="16" r="2.4" fill="#08090C"/>
+    </svg>
+          <div style="display:flex; flex-direction:column; gap:9px;">
+            <div style="display:flex; align-items:center; gap:9px;"><svg width="26" height="26" viewBox="0 0 32 32" fill="none">
+      <path d="M16 3 A13 13 0 0 0 16 29 Z" fill="#E8C56A"/>
+      <path d="M16 3 A13 13 0 0 1 16 29" stroke="#F1EFEA" stroke-width="1.6" fill="none"/>
+      <circle cx="16" cy="16" r="2.4" fill="#08090C"/>
+    </svg>
+              <span class="fig" style="font-size:22px;">Fin<span style="color:#E8C56A;">·</span>Esse</span></div>
+            <div style="display:flex; align-items:center; gap:7px; opacity:.75;"><svg width="16" height="16" viewBox="0 0 32 32" fill="none">
+      <path d="M16 3 A13 13 0 0 0 16 29 Z" fill="#E8C56A"/>
+      <path d="M16 3 A13 13 0 0 1 16 29" stroke="#F1EFEA" stroke-width="1.6" fill="none"/>
+      <circle cx="16" cy="16" r="2.4" fill="#08090C"/>
+    </svg>
+              <span class="fig" style="font-size:13px;">Fin<span style="color:#E8C56A;">·</span>Esse</span></div>
+          </div>
+        </div>
+        <div class="lbl" style="margin-top:20px;">01 — Two halves</div>
+        <div style="font-size:12.5px; color:#8D94A2; margin-top:9px; line-height:1.6;">One circle, split. Half solid, half drawn — the human and the agent weighing the same position. The gap at the centre is the interpunct in the name.</div>
+      </div>
+    <div class="r d4 lift" style="border:1px solid #242A34; background:#101319; padding:26px;">
+        <div style="display:flex; align-items:center; gap:18px; height:72px;"><svg width="64" height="64" viewBox="0 0 32 32" fill="none">
+      <path d="M16 5 V27" stroke="#F1EFEA" stroke-width="1.6" stroke-linecap="round"/>
+      <path d="M6 11 H26" stroke="#F1EFEA" stroke-width="1.6" stroke-linecap="round"/>
+      <path d="M6 11 L2.5 18 A3.9 3.9 0 0 0 9.5 18 Z" fill="#E8C56A"/>
+      <path d="M26 11 L22.5 18 A3.9 3.9 0 0 0 29.5 18 Z" stroke="#F1EFEA" stroke-width="1.4" fill="none"/>
+      <circle cx="16" cy="5" r="1.9" fill="#E8C56A"/>
+    </svg>
+          <div style="display:flex; flex-direction:column; gap:9px;">
+            <div style="display:flex; align-items:center; gap:9px;"><svg width="26" height="26" viewBox="0 0 32 32" fill="none">
+      <path d="M16 5 V27" stroke="#F1EFEA" stroke-width="1.6" stroke-linecap="round"/>
+      <path d="M6 11 H26" stroke="#F1EFEA" stroke-width="1.6" stroke-linecap="round"/>
+      <path d="M6 11 L2.5 18 A3.9 3.9 0 0 0 9.5 18 Z" fill="#E8C56A"/>
+      <path d="M26 11 L22.5 18 A3.9 3.9 0 0 0 29.5 18 Z" stroke="#F1EFEA" stroke-width="1.4" fill="none"/>
+      <circle cx="16" cy="5" r="1.9" fill="#E8C56A"/>
+    </svg>
+              <span class="fig" style="font-size:22px;">Fin<span style="color:#E8C56A;">·</span>Esse</span></div>
+            <div style="display:flex; align-items:center; gap:7px; opacity:.75;"><svg width="16" height="16" viewBox="0 0 32 32" fill="none">
+      <path d="M16 5 V27" stroke="#F1EFEA" stroke-width="1.6" stroke-linecap="round"/>
+      <path d="M6 11 H26" stroke="#F1EFEA" stroke-width="1.6" stroke-linecap="round"/>
+      <path d="M6 11 L2.5 18 A3.9 3.9 0 0 0 9.5 18 Z" fill="#E8C56A"/>
+      <path d="M26 11 L22.5 18 A3.9 3.9 0 0 0 29.5 18 Z" stroke="#F1EFEA" stroke-width="1.4" fill="none"/>
+      <circle cx="16" cy="5" r="1.9" fill="#E8C56A"/>
+    </svg>
+              <span class="fig" style="font-size:13px;">Fin<span style="color:#E8C56A;">·</span>Esse</span></div>
+          </div>
+        </div>
+        <div class="lbl" style="margin-top:20px;">02 — Balance</div>
+        <div style="font-size:12.5px; color:#8D94A2; margin-top:9px; line-height:1.6;">A scale with one pan full and one empty: debt against investment, the question the app exists to answer. Most literal, and the busiest at 16px.</div>
+      </div>
+    <div class="r d5 lift" style="border:1px solid #242A34; background:#101319; padding:26px;">
+        <div style="display:flex; align-items:center; gap:18px; height:72px;"><svg width="64" height="64" viewBox="0 0 32 32" fill="none">
+      <rect x="5.0" y="19" width="4.4" height="6" rx="1" fill="#F1EFEA" opacity="0.45"/><rect x="11.4" y="15" width="4.4" height="10" rx="1" fill="#F1EFEA" opacity="0.5700000000000001"/><rect x="17.8" y="11" width="4.4" height="14" rx="1" fill="#F1EFEA" opacity="0.69"/><rect x="24.200000000000003" y="5" width="4.4" height="20" rx="1" fill="#E8C56A" opacity="1"/>
+      <circle cx="27" cy="6" r="2.3" fill="#E8C56A"/>
+    </svg>
+          <div style="display:flex; flex-direction:column; gap:9px;">
+            <div style="display:flex; align-items:center; gap:9px;"><svg width="26" height="26" viewBox="0 0 32 32" fill="none">
+      <rect x="5.0" y="19" width="4.4" height="6" rx="1" fill="#F1EFEA" opacity="0.45"/><rect x="11.4" y="15" width="4.4" height="10" rx="1" fill="#F1EFEA" opacity="0.5700000000000001"/><rect x="17.8" y="11" width="4.4" height="14" rx="1" fill="#F1EFEA" opacity="0.69"/><rect x="24.200000000000003" y="5" width="4.4" height="20" rx="1" fill="#E8C56A" opacity="1"/>
+      <circle cx="27" cy="6" r="2.3" fill="#E8C56A"/>
+    </svg>
+              <span class="fig" style="font-size:22px;">Fin<span style="color:#E8C56A;">·</span>Esse</span></div>
+            <div style="display:flex; align-items:center; gap:7px; opacity:.75;"><svg width="16" height="16" viewBox="0 0 32 32" fill="none">
+      <rect x="5.0" y="19" width="4.4" height="6" rx="1" fill="#F1EFEA" opacity="0.45"/><rect x="11.4" y="15" width="4.4" height="10" rx="1" fill="#F1EFEA" opacity="0.5700000000000001"/><rect x="17.8" y="11" width="4.4" height="14" rx="1" fill="#F1EFEA" opacity="0.69"/><rect x="24.200000000000003" y="5" width="4.4" height="20" rx="1" fill="#E8C56A" opacity="1"/>
+      <circle cx="27" cy="6" r="2.3" fill="#E8C56A"/>
+    </svg>
+              <span class="fig" style="font-size:13px;">Fin<span style="color:#E8C56A;">·</span>Esse</span></div>
+          </div>
+        </div>
+        <div class="lbl" style="margin-top:20px;">03 — Ascent</div>
+        <div style="font-size:12.5px; color:#8D94A2; margin-top:9px; line-height:1.6;">Four rising bars with the last one lit. Clear at any size, but it is the most generic finance mark of the four.</div>
+      </div>
+    <div class="r d6 lift" style="border:1px solid #242A34; background:#101319; padding:26px;">
+        <div style="display:flex; align-items:center; gap:18px; height:72px;"><svg width="64" height="64" viewBox="0 0 32 32" fill="none">
+      <rect x="3.5" y="3.5" width="25" height="25" rx="7.5" stroke="#323945" stroke-width="1.4"/>
+      <path d="M11 22 V10 H21" stroke="#F1EFEA" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M11 16 H18" stroke="#E8C56A" stroke-width="2.1" stroke-linecap="round"/>
+    </svg>
+          <div style="display:flex; flex-direction:column; gap:9px;">
+            <div style="display:flex; align-items:center; gap:9px;"><svg width="26" height="26" viewBox="0 0 32 32" fill="none">
+      <rect x="3.5" y="3.5" width="25" height="25" rx="7.5" stroke="#323945" stroke-width="1.4"/>
+      <path d="M11 22 V10 H21" stroke="#F1EFEA" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M11 16 H18" stroke="#E8C56A" stroke-width="2.1" stroke-linecap="round"/>
+    </svg>
+              <span class="fig" style="font-size:22px;">Fin<span style="color:#E8C56A;">·</span>Esse</span></div>
+            <div style="display:flex; align-items:center; gap:7px; opacity:.75;"><svg width="16" height="16" viewBox="0 0 32 32" fill="none">
+      <rect x="3.5" y="3.5" width="25" height="25" rx="7.5" stroke="#323945" stroke-width="1.4"/>
+      <path d="M11 22 V10 H21" stroke="#F1EFEA" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M11 16 H18" stroke="#E8C56A" stroke-width="2.1" stroke-linecap="round"/>
+    </svg>
+              <span class="fig" style="font-size:13px;">Fin<span style="color:#E8C56A;">·</span>Esse</span></div>
+          </div>
+        </div>
+        <div class="lbl" style="margin-top:20px;">04 — Monogram</div>
+        <div style="font-size:12.5px; color:#8D94A2; margin-top:9px; line-height:1.6;">An F drawn inside a rounded frame, its middle stroke gold. Safest and most app-icon-like; says least about what the product does.</div>
+      </div>
+  </div>
+
+  <div class="r d7" style="margin-top:44px; padding-top:32px; border-top:1px solid #242A34;">
+    <div class="lbl">Palette</div>
+    <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:22px 30px; margin-top:22px;">
+      <div style="display:flex; align-items:center; gap:13px;">
+        <div style="width:38px;height:38px;background:#08090C;border:1px solid #323945;flex:none;"></div>
+        <div><div style="font-size:12.5px;">Void</div>
+        <div class="fig" style="font-size:12px; color:#8D94A2;">#08090C</div>
+        <div style="font-size:11px; color:#565E6C; margin-top:2px;">page ground</div></div>
+      </div>
+      <div style="display:flex; align-items:center; gap:13px;">
+        <div style="width:38px;height:38px;background:#101319;border:1px solid #323945;flex:none;"></div>
+        <div><div style="font-size:12.5px;">Surface</div>
+        <div class="fig" style="font-size:12px; color:#8D94A2;">#101319</div>
+        <div style="font-size:11px; color:#565E6C; margin-top:2px;">panels, the agent rail</div></div>
+      </div>
+      <div style="display:flex; align-items:center; gap:13px;">
+        <div style="width:38px;height:38px;background:#171B23;border:1px solid #323945;flex:none;"></div>
+        <div><div style="font-size:12.5px;">Raised</div>
+        <div class="fig" style="font-size:12px; color:#8D94A2;">#171B23</div>
+        <div style="font-size:11px; color:#565E6C; margin-top:2px;">inputs and chips</div></div>
+      </div>
+      <div style="display:flex; align-items:center; gap:13px;">
+        <div style="width:38px;height:38px;background:#242A34;border:1px solid #323945;flex:none;"></div>
+        <div><div style="font-size:12.5px;">Edge</div>
+        <div class="fig" style="font-size:12px; color:#8D94A2;">#242A34</div>
+        <div style="font-size:11px; color:#565E6C; margin-top:2px;">hairlines</div></div>
+      </div>
+      <div style="display:flex; align-items:center; gap:13px;">
+        <div style="width:38px;height:38px;background:#F1EFEA;border:1px solid #323945;flex:none;"></div>
+        <div><div style="font-size:12.5px;">Ink</div>
+        <div class="fig" style="font-size:12px; color:#8D94A2;">#F1EFEA</div>
+        <div style="font-size:11px; color:#565E6C; margin-top:2px;">primary type</div></div>
+      </div>
+      <div style="display:flex; align-items:center; gap:13px;">
+        <div style="width:38px;height:38px;background:#8D94A2;border:1px solid #323945;flex:none;"></div>
+        <div><div style="font-size:12.5px;">Muted</div>
+        <div class="fig" style="font-size:12px; color:#8D94A2;">#8D94A2</div>
+        <div style="font-size:11px; color:#565E6C; margin-top:2px;">secondary type</div></div>
+      </div>
+      <div style="display:flex; align-items:center; gap:13px;">
+        <div style="width:38px;height:38px;background:#E8C56A;border:1px solid #323945;flex:none;"></div>
+        <div><div style="font-size:12.5px;">Champagne</div>
+        <div class="fig" style="font-size:12px; color:#8D94A2;">#E8C56A</div>
+        <div style="font-size:11px; color:#565E6C; margin-top:2px;">the one accent — sparingly</div></div>
+      </div>
+      <div style="display:flex; align-items:center; gap:13px;">
+        <div style="width:38px;height:38px;background:#E0705C;border:1px solid #323945;flex:none;"></div>
+        <div><div style="font-size:12.5px;">Coral</div>
+        <div class="fig" style="font-size:12px; color:#8D94A2;">#E0705C</div>
+        <div style="font-size:11px; color:#565E6C; margin-top:2px;">needs your attention</div></div>
+      </div>
+    </div>
+    <div style="font-size:12.5px; color:#8D94A2; margin-top:24px; max-width:70ch; line-height:1.7;">Cooler and deeper than the first sketch. The old ground was a flat slate and the bronze went muddy under the serif; this runs near-black with a blue undertone, three levels of elevation, and a champagne that stays gold at 12px. Jade is reserved for the connection dot.</div>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>
