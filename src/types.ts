@@ -127,6 +127,13 @@ export interface AppState {
   scenarios: SavedScenario[];
   /** When non-null, the profile is a sandboxed fork; baseline holds the real one. */
   scenarioMode: { name: string; baseline: Profile } | null;
+  /**
+   * Which set of numbers the UI is showing while a branch is open. The branch
+   * is a place you visit, not a mode the whole app enters, so your real
+   * position stays one click away instead of behind an unwind.
+   * Agent tools always operate on the branch regardless of this.
+   */
+  workspace: "real" | "branch";
   highlighted: Record<string, number>;
   toolNames: string[];
   webmcpStatus: "unsupported" | "ready";

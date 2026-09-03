@@ -103,6 +103,7 @@ function shouldRegister(name: string): boolean {
     case "advisor_begin_whatif":
       return !inScenario && (hasLoans || hasHoldings);
     case "advisor_end_whatif":
+    case "advisor_whatif_diff":
       return inScenario;
     case "advisor_save_scenario":
       return hasLoans || hasHoldings;

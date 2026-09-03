@@ -34,6 +34,13 @@
    "y": 1250,
    "w": 1440,
    "h": 1100
+  },
+  {
+   "file": "Whatif.dc.html",
+   "x": 3100,
+   "y": 1250,
+   "w": 1440,
+   "h": 1100
   }
  ],
  "annotations": [
@@ -50,6 +57,13 @@
    "y": 0,
    "w": 300,
    "text": "The agent rail is pinned on every page — approvals and the live tool trail are global state, not a page.\n\nOnly the approval gets card chrome: it is the one thing asking you to act."
+  },
+  {
+   "id": "whatif-note",
+   "x": 3210,
+   "y": 1250,
+   "w": 300,
+   "text": "The sixth screen — only exists while a branch is open.\n\nIt is a place you visit, not a mode the app enters: the five real pages keep showing real numbers the whole time.\n\nThe hard part: a figure can change and be WORSE. Changed and improved need different treatments."
   }
  ],
  "launch": {

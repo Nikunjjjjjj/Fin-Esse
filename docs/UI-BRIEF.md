@@ -125,6 +125,35 @@ deliberately different assumptions (growth assumes 13% returns, preservation
 assumes 7%), what each concludes, and the single assumption the disagreement
 turns on.
 
+### What-if — appears only while a branch is open
+
+A **sixth nav entry**, named after the branch, visually set apart from the
+five permanent ones. It is the app's most distinctive screen and needs the
+most design thought.
+
+A what-if branch forks the entire profile so the agent can explore
+destructively — clear a loan, crash the market, reprice everything — and throw
+it away. The branch is **a place you visit, not a mode the app enters**: your
+five real pages keep showing your real numbers the whole time, one click away,
+so comparing costs nothing and there is never doubt about which figures you
+are looking at.
+
+The page shows a **side-by-side diff**: your actual position beside the
+hypothetical, with every changed figure marked and labelled better or worse.
+Two levels:
+
+- **Headline figures** — net worth, total debt, monthly surplus, emergency
+  runway, debt service %, exposure score, portfolio risk, portfolio value.
+  Each has a before, an after, a direction, and whether that direction helps.
+- **Individual entries** — every loan, holding and goal that was added,
+  removed or changed, with only the fields that actually moved.
+
+Direction is not the same as good. Debt falling is an improvement; net worth
+falling is not. The design must distinguish *changed* from *improved*.
+
+Actions on this page: **Discard** (throw the branch away) and **Keep**
+(adopt it into the real profile).
+
 ---
 
 ## 5. Persistent UI (present on every screen)
@@ -162,7 +191,9 @@ Easy to forget, and all of these really occur:
 | **Empty profile** | No loans, holdings or goals. Needs a real first-run path, not a blank page. |
 | **Entity flashing** | A card highlights for ~4s when a tool call names it. |
 | **Proposal pending / approved / rejected** | Three distinct looks. |
-| **What-if branch open** | The whole app is a sandbox fork. Must be unmistakable — the person has to know these aren't their real numbers. Has Discard / Keep actions. |
+| **What-if branch open** | A sixth nav entry appears, named after the branch. The five real pages are unaffected. Needs to be unmistakable which workspace you are in. |
+| **Viewing branch vs viewing reality** | Two workspaces, switchable. The chrome should make the current one obvious at a glance — a screenshot of either must be self-explanatory. |
+| **Diff row: improved / worsened / unchanged** | Three treatments. Note that a figure can change and be worse. |
 | **Shared position loaded** | The profile came from someone else's handoff link. Shows who shared it and their note. |
 | **Goal at risk** vs **fundable** | |
 | **Costly debt** | A loan priced far above expected returns. |
@@ -178,7 +209,12 @@ Easy to forget, and all of these really occur:
   are defined, ~42 visible with the sample loaded. If you show a tool count, it
   moves.
 - **Tool groups:** `loan_*` (8), `portfolio_*` (9), `budget_*` (9),
-  `advisor_*` (18). 25 read, 17 write, 2 propose.
+  `advisor_*` (19). 26 read, 17 write, 2 propose. 45 defined; ~42 visible at
+  any moment because of gating.
+- **While a branch is open the agent always works in the branch**, whichever
+  workspace you happen to be viewing. It cannot see your navigation, so tying
+  its scope to the current page would give it the wrong context the moment you
+  clicked away. Worth conveying in the chrome so nobody is surprised.
 - **Handoff links.** A person can package their whole position into a URL and
   send it to someone else, whose agent picks up the same state. Needs an entry
   point and a receiving banner.

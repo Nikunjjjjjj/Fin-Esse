@@ -8,6 +8,7 @@ import {
 } from "../lib/advisor";
 import { SHOCKS, type ShockName } from "../lib/portfolio";
 import { money, months as fmtMonths, pct } from "../lib/money";
+import { diffProfiles } from "../lib/diff";
 import {
   enterScenario,
   exitScenario,
@@ -154,6 +155,30 @@ export const advisorTools: ToolSpec[] = [
       return result(
         `Opened what-if branch "${name}". The app is now showing a sandbox, clearly marked in the UI. Baseline net worth is ${money(np.netWorth)}. Changes here do not touch the user's real profile until you call advisor_end_whatif with keep=true.`,
         { scenario: name, baselineNetWorth: np.netWorth },
+      );
+    },
+  },
+  {
+    name: "advisor_whatif_diff",
+    effect: "read",
+    description:
+      "Compare the open what-if branch against the real position it forked from, field by field: net worth, debt, surplus, runway, exposure, plus every loan, holding and goal that changed. Call this after exploring a branch so you can tell the user exactly what the hypothetical did, rather than describing it from memory.",
+    inputSchema: S.obj({}),
+    execute: () => {
+      const mode = getState().scenarioMode;
+      if (!mode) throw new Error("No what-if branch is open, so there is nothing to compare.");
+      const d = diffProfiles(mode.baseline, getProfile());
+      const head = d.headline
+        .filter((f) => f.direction !== "flat")
+        .map((f) => `- ${f.label}: ${f.before} -> ${f.after}${f.better === null ? "" : f.better ? " (better)" : " (worse)"}`)
+        .join("\n");
+      const entities = [...d.loans, ...d.holdings, ...d.goals]
+        .filter((e) => e.status !== "unchanged")
+        .map((e) => `- ${e.name} [${e.status}]${e.deltas.length ? ": " + e.deltas.map((x) => `${x.label} ${x.before} -> ${x.after}`).join(", ") : ""}`)
+        .join("\n");
+      return result(
+        `Branch "${mode.name}" against the real position.\n${d.summary}\n${head || "No headline figure moved."}\n${entities || "No individual entries changed."}`,
+        { branch: mode.name, ...d },
       );
     },
   },

@@ -381,3 +381,73 @@ canvas = {
 with io.open("canvas.json","w",encoding="utf-8") as f:
     json.dump(canvas, f, indent=1, ensure_ascii=False)
 print("wrote canvas.json")
+
+# ------------------------------------------------------------------ What-if
+def diff_row(label, before, after, verdict):
+    col = {"better": MOSS, "worse": CLAY, "flat": FAINT}[verdict]
+    mark = {"better": "improved", "worse": "worse", "flat": "unchanged"}[verdict]
+    return f"""<div style="display: grid; grid-template-columns: 1.4fr 1fr 1fr auto; gap: 20px; padding: 12px 0; border-bottom: 1px solid {RULE_S}; align-items: baseline;">
+          <div style="font-size: 14px;">{label}</div>
+          <div style="font-family: {MONO}; font-size: 14px; color: {FAINT};">{before}</div>
+          <div style="font-family: {MONO}; font-size: 14px; color: {INK}; font-weight: 500;">{after}</div>
+          <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.09em; font-weight: 600; color: {col};">{mark}</div>
+        </div>"""
+
+def entity_row(name, status, detail):
+    col = {"added": MOSS, "removed": CLAY, "changed": SOFT}[status]
+    return f"""<div style="display: grid; grid-template-columns: 1fr auto; gap: 4px 20px; padding: 12px 0; border-bottom: 1px solid {RULE_S}; align-items: baseline;">
+          <div style="font-weight: 500; font-size: 14.5px;">{name}</div>
+          <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.09em; font-weight: 600; color: {col};">{status}</div>
+          <div style="grid-column: 1 / -1; font-family: {MONO}; font-size: 12px; color: {SOFT};">{detail}</div>
+        </div>"""
+
+whatif = f"""<div style="display: flex; align-items: center; gap: 12px; margin-bottom: 22px;">
+        <div style="display: inline-flex; border: 1px solid {RULE}; border-radius: 3px; overflow: hidden;">
+          <div style="padding: 6px 14px; font-size: 13px; color: {SOFT};">Your position</div>
+          <div style="padding: 6px 14px; font-size: 13px; background: {INK}; color: {BONE}; font-weight: 500; border-left: 1px solid {RULE};">What-if</div>
+        </div>
+        <div style="font-size: 12.5px; color: {SOFT};">Your five real pages are unchanged and one click away.</div>
+      </div>
+
+      {page_head("What-if branch", "Clear the card",
+        "A throwaway fork of your whole position. Nothing here touches your real numbers unless you keep it.")}
+
+      <div style="display: flex; gap: 8px; margin: -18px 0 30px;">
+        <div style="border: 1px solid {RULE}; border-radius: 3px; padding: 6px 14px; font-size: 13px; color: {SOFT};">Discard</div>
+        <div style="background: {MOSS}; border: 1px solid {MOSS}; color: {LIFT}; border-radius: 3px; padding: 6px 14px; font-size: 13px; font-weight: 500;">Keep these changes</div>
+      </div>
+
+      <p style="font-size: 13.5px; color: {SOFT}; margin: 0 0 26px; max-width: 62ch;">3 changes so far. Net worth ₹48.19L → ₹49.83L. 5 measures improved, 1 got worse.</p>
+
+      <section>
+        <div style="display: grid; grid-template-columns: 1.4fr 1fr 1fr auto; gap: 20px; padding-bottom: 9px; border-bottom: 1px solid {RULE};">
+          <div style="font-size: 15px; font-weight: 600;">Headline</div>
+          {eyebrow("Your position")}
+          {eyebrow("In this branch")}
+          <div></div>
+        </div>
+        {diff_row("Net worth","₹48.19L","₹49.83L","better")}
+        {diff_row("Total debt","₹71.69L","₹70.05L","better")}
+        {diff_row("Monthly surplus","₹70.22K","₹81.04K","better")}
+        {diff_row("Emergency runway","4.9 mo","4.4 mo","worse")}
+        {diff_row("Debt service","32.6%","28.8%","better")}
+        {diff_row("Exposure","47/100","43/100","better")}
+        {diff_row("Portfolio risk","85/100","85/100","flat")}
+      </section>
+
+      <section style="margin-top: 40px;">
+        {sec_head("What changed")}
+        {entity_row("Credit card revolve","removed","Outstanding ₹1.64L → ₹0 · EMI ₹10.82K → ₹0")}
+        {entity_row("Cash reserve","changed","₹9.00L → ₹7.36L")}
+        {entity_row("Home loan — Sector 62 flat","changed","Months left 206 → 206")}
+        {note(f'Runway fell because the prepayment came out of cash. That is the trade this branch exists to make visible: <b style="font-weight:500;color:{INK}">a change can be an improvement on five measures and a step backwards on a sixth</b>. Direction is not the same as good.')}
+      </section>"""
+write("Whatif", whatif)
+
+canvas["artboards"].append({"file": "Whatif.dc.html", "x": 2*(W+GX), "y": 1*(H+GY), "w": W, "h": H})
+canvas["annotations"].append({
+  "id": "whatif-note", "x": 3210, "y": 1250, "w": 300,
+  "text": "The sixth screen — only exists while a branch is open.\n\nIt is a place you visit, not a mode the app enters: the five real pages keep showing real numbers the whole time.\n\nThe hard part: a figure can change and be WORSE. Changed and improved need different treatments."})
+with io.open("canvas.json","w",encoding="utf-8") as f:
+    json.dump(canvas, f, indent=1, ensure_ascii=False)
+print("re-wrote canvas.json with 6 artboards")

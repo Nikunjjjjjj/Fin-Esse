@@ -17,6 +17,7 @@ let state: AppState = {
   proposals: [],
   scenarios: [],
   scenarioMode: null,
+  workspace: "real",
   highlighted: {},
   toolNames: [],
   webmcpStatus: "unsupported",
@@ -168,6 +169,7 @@ export function loadDemoProfile(code?: CurrencyCode) {
     proposals: [],
     scenarios: [],
     scenarioMode: null,
+    workspace: "real",
     handoff: null,
   });
   logActivity("system", "app", "Loaded the sample financial profile.");
@@ -180,6 +182,7 @@ export function resetProfile() {
     proposals: [],
     scenarios: [],
     scenarioMode: null,
+    workspace: "real",
     handoff: null,
   });
   logActivity("system", "app", "Cleared the profile.");
@@ -187,15 +190,37 @@ export function resetProfile() {
 
 export function enterScenario(name: string) {
   if (state.scenarioMode) return false;
-  setState({ scenarioMode: { name, baseline: state.profile } });
+  // Land the viewer in the branch they just opened; the real pages stay
+  // available and unchanged behind the workspace switch.
+  setState({ scenarioMode: { name, baseline: state.profile }, workspace: "branch" });
   return true;
+}
+
+export function setWorkspace(workspace: "real" | "branch") {
+  if (!state.scenarioMode && workspace === "branch") return;
+  setState({ workspace });
+}
+
+/**
+ * The profile the UI should render. Tools always act on `profile` (the branch
+ * while one is open); this is purely about what the person is looking at.
+ */
+export function viewedProfile(): Profile {
+  const s = state;
+  return s.scenarioMode && s.workspace === "real" ? s.scenarioMode.baseline : s.profile;
+}
+
+export function useViewedProfile(): Profile {
+  return useSelector((st) =>
+    st.scenarioMode && st.workspace === "real" ? st.scenarioMode.baseline : st.profile,
+  );
 }
 
 export function exitScenario(keep: boolean) {
   const mode = state.scenarioMode;
   if (!mode) return null;
   const explored = state.profile;
-  setState({ profile: keep ? explored : mode.baseline, scenarioMode: null });
+  setState({ profile: keep ? explored : mode.baseline, scenarioMode: null, workspace: "real" });
   return { name: mode.name, kept: keep };
 }
 
