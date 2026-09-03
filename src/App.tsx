@@ -8,8 +8,11 @@ import { Proposals } from "./components/Proposals";
 import { Recommendations } from "./components/Recommendations";
 import { Scenarios } from "./components/Scenarios";
 import { ToolInspector } from "./components/ToolInspector";
+import { HandoffBanner, ShareButton } from "./components/Handoff";
+import { SecondOpinion } from "./components/SecondOpinion";
 import { Panel } from "./components/common";
-import { exitScenario, loadDemoProfile, resetProfile, useSelector } from "./store/store";
+import { applyHandoff, exitScenario, loadDemoProfile, logActivity, resetProfile, useSelector } from "./store/store";
+import { decodeHandoff, readHandoffFromUrl } from "./lib/handoff";
 import { startWebMcp, watchForToolChanges } from "./webmcp/register";
 import { webmcpFlavour } from "./webmcp/shim";
 
@@ -18,6 +21,8 @@ const PROMPTS = [
   "I've got ₹3,00,000 spare. Should I prepay a loan or invest it?",
   "What happens to me if I lose my job for 9 months and the market crashes?",
   "Open a what-if branch where I clear the credit card, then compare it to today.",
+  "Argue both sides: growth advisor vs preservation advisor, on ₹3,00,000 spare.",
+  "Package my position into a link I can send my partner's agent.",
 ];
 
 export default function App() {
@@ -28,11 +33,34 @@ export default function App() {
   );
 
   useEffect(() => {
-    // Judges and first-time visitors should never land on an empty shell, so
-    // the sample profile loads by default. ?empty=1 gives the blank slate.
-    if (!new URLSearchParams(location.search).has("empty")) loadDemoProfile();
+    function loadShared(encoded: string) {
+      decodeHandoff(encoded)
+        .then(applyHandoff)
+        .catch((e) => logActivity("system", "handoff", `Could not read that shared position: ${e.message}`));
+    }
+
+    // A shared position in the URL fragment wins over everything else: someone
+    // followed a handoff link and expects to land on those numbers.
+    const shared = readHandoffFromUrl();
+    if (shared) {
+      loadShared(shared);
+    } else if (!new URLSearchParams(location.search).has("empty")) {
+      // Judges and first-time visitors should never land on an empty shell.
+      loadDemoProfile();
+    }
+
+    // Changing only the fragment is a same-document navigation, so pasting a
+    // handoff link into an already-open tab never remounts this component.
+    // Without this listener that paste would silently do nothing.
+    const onHashChange = () => {
+      const next = readHandoffFromUrl();
+      if (next) loadShared(next);
+    };
+    addEventListener("hashchange", onHashChange);
+
     startWebMcp();
     watchForToolChanges();
+    return () => removeEventListener("hashchange", onHashChange);
   }, []);
 
   return (
@@ -43,6 +71,7 @@ export default function App() {
           <span className="tag">financial planning you and an agent do together</span>
         </div>
         <span className="spacer" />
+        <ShareButton />
         <button className="btn sm" onClick={loadDemoProfile}>Load sample profile</button>
         <button className="btn sm ghost" onClick={resetProfile}>Clear</button>
         <span className={status === "ready" ? "status ready" : "status"}>
@@ -50,6 +79,8 @@ export default function App() {
           {status === "ready" ? `WebMCP live · ${webmcpFlavour()}.modelContext` : "No agent detected"}
         </span>
       </div>
+
+      <HandoffBanner />
 
       {scenarioMode && (
         <div className="scenario-banner">
@@ -78,6 +109,7 @@ export default function App() {
             <Loans />
             <Portfolio />
           </div>
+          <SecondOpinion />
           <div className="grid2">
             <BudgetGoals />
             <Recommendations />

@@ -8,6 +8,7 @@ import type {
   SavedScenario,
 } from "../types";
 import { demoProfile, emptyProfile } from "./seed";
+import { sanitizeProfile, type HandoffPacket } from "../lib/handoff";
 
 let state: AppState = {
   profile: emptyProfile(),
@@ -18,6 +19,7 @@ let state: AppState = {
   highlighted: {},
   toolNames: [],
   webmcpStatus: "unsupported",
+  handoff: null,
 };
 
 const listeners = new Set<() => void>();
@@ -135,6 +137,25 @@ export function exitScenario(keep: boolean) {
   const explored = state.profile;
   setState({ profile: keep ? explored : mode.baseline, scenarioMode: null });
   return { name: mode.name, kept: keep };
+}
+
+export function applyHandoff(packet: HandoffPacket) {
+  setState({
+    profile: sanitizeProfile(packet.profile),
+    proposals: [],
+    scenarios: [],
+    scenarioMode: null,
+    handoff: { from: packet.from, note: packet.note, at: packet.at },
+  });
+  logActivity(
+    "system",
+    "handoff",
+    `Loaded a shared position from ${packet.from}${packet.note ? `: "${packet.note}"` : ""}. You are now reasoning on their numbers.`,
+  );
+}
+
+export function dismissHandoff() {
+  setState({ handoff: null });
 }
 
 export function saveScenario(name: string, note: string): SavedScenario {

@@ -5,6 +5,7 @@ import { advisorTools } from "./tools.advisor";
 import { budgetTools } from "./tools.budget";
 import { loanTools } from "./tools.loan";
 import { portfolioTools } from "./tools.portfolio";
+import { handoffTools } from "./tools.handoff";
 
 /**
  * Tools that are always available, versus tools that only make sense once the
@@ -34,9 +35,18 @@ const ALWAYS: ReadonlySet<string> = new Set([
   "advisor_assumptions",
   "advisor_recommendations",
   "advisor_risk_exposure",
+  "advisor_load_handoff_link",
+  "advisor_list_stances",
+  "advisor_shared_position_info",
 ]);
 
-const ALL_TOOLS: ToolSpec[] = [...loanTools, ...portfolioTools, ...budgetTools, ...advisorTools];
+const ALL_TOOLS: ToolSpec[] = [
+  ...loanTools,
+  ...portfolioTools,
+  ...budgetTools,
+  ...advisorTools,
+  ...handoffTools,
+];
 
 function shouldRegister(name: string): boolean {
   const s = getState();
@@ -75,6 +85,14 @@ function shouldRegister(name: string): boolean {
     case "advisor_prepay_vs_invest":
     case "advisor_horizon_projection":
       return hasLoans;
+
+    // Sharing an empty profile helps nobody, and a second opinion needs
+    // something to actually disagree about.
+    case "advisor_create_handoff_link":
+      return hasLoans || hasHoldings || hasGoals;
+    case "advisor_second_opinion":
+    case "advisor_argue_as":
+      return hasLoans || hasHoldings;
     case "advisor_stress_test":
       return hasLoans || hasHoldings;
     case "advisor_explain_number":

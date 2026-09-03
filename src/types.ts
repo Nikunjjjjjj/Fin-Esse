@@ -128,4 +128,6 @@ export interface AppState {
   highlighted: Record<string, number>;
   toolNames: string[];
   webmcpStatus: "unsupported" | "ready";
+  /** Set when the current profile arrived via a shared handoff link. */
+  handoff: { from: string; note: string; at: number } | null;
 }
