@@ -2,6 +2,8 @@
 
 **Financial planning that a human and an AI agent do together, in the browser, on live state.**
 
+**Live: https://fin-esse-beta.vercel.app/**
+
 Built for the OpenAI WebMCP Challenge. Fin·Esse is a working personal-finance
 workspace — loans, portfolio, budget, goals — that exposes its entire
 capability surface as [WebMCP](https://github.com/webmachinelearning/webmcp)
@@ -19,8 +21,8 @@ taking real, visible, multi-step actions on the same state you are looking at.
 
 | Surface | How |
 | --- | --- |
-| **ChatGPT desktop app** | Open the live URL in the in-app browser. WebMCP is on by default. |
-| **Chrome 149+** | Enable `chrome://flags/#enable-webmcp-testing`, restart, open the URL. |
+| **ChatGPT desktop app** | Open [https://fin-esse-beta.vercel.app/](https://fin-esse-beta.vercel.app/) in the in-app browser. WebMCP is on by default. |
+| **Chrome 149+** | Enable `chrome://flags/#enable-webmcp-testing`, restart, then open the URL. |
 | **Any browser** | Everything works without an agent — the tools are simply not exposed. |
 
 A sample profile loads automatically so there is something to talk about.

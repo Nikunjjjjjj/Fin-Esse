@@ -1,6 +1,8 @@
 # Devpost submission draft
 
-Replace `LIVE_URL` and `VIDEO_URL` before submitting.
+Live URL: https://fin-esse-beta.vercel.app/
+
+Still to fill in: `VIDEO_URL`.
 
 ---
 
