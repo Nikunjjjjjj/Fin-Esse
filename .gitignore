@@ -3,3 +3,6 @@ dist
 .vercel
 *.local
 .DS_Store
+
+# Seeded design-canvas output — regenerate from design/build.py, ~2.5MB of editor payload
+design/fin-esse-ui.html

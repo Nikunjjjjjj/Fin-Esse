@@ -1,0 +1,169 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700&amp;family=IBM+Plex+Mono:wght@400;500;600&amp;display=swap">
+  <style>
+    body { margin: 0; background: #F4F2ED; font-family: 'Schibsted Grotesk', 'Helvetica Neue', Arial, sans-serif; color: #23211E; }
+    a { color: #4A5D43; text-decoration: none; }
+    a:hover { color: #23211E; }
+    * { box-sizing: border-box; }
+  </style>
+</helmet>
+<div style="display: flex; width: 1440px; min-height: 1100px; background: #F4F2ED;">
+    <aside style="width: 216px; flex: none; border-right: 1px solid #DCD7CD; padding: 26px 0 20px; display: flex; flex-direction: column; gap: 30px;">
+      <div style="padding: 0 22px;">
+        <div style="font-size: 19px; font-weight: 700; letter-spacing: -0.03em;">Fin·Esse</div>
+        <div style="font-size: 12px; color: #9C968A;">planning, with an agent</div>
+      </div>
+      <div style="display: flex; flex-direction: column;">
+        <div style="padding: 8px 22px; font-size: 14.5px; color: #23211E; font-weight: 600; border-left: 2px solid #4A5D43;">Overview</div>
+        <div style="padding: 8px 22px; font-size: 14.5px; color: #6B665D; font-weight: 400; border-left: 2px solid transparent;">Debt</div>
+        <div style="padding: 8px 22px; font-size: 14.5px; color: #6B665D; font-weight: 400; border-left: 2px solid transparent;">Investments</div>
+        <div style="padding: 8px 22px; font-size: 14.5px; color: #6B665D; font-weight: 400; border-left: 2px solid transparent;">Cashflow</div>
+        <div style="padding: 8px 22px; font-size: 14.5px; color: #6B665D; font-weight: 400; border-left: 2px solid transparent;">Advice</div>
+      </div>
+      <div style="margin-top: auto; padding: 0 22px; display: flex; flex-direction: column; gap: 12px;">
+        <div style="display: inline-flex; border: 1px solid #DCD7CD; border-radius: 3px; overflow: hidden; width: fit-content;">
+          <div style="padding: 3px 9px; font-size: 12px; background: #4A5D43; color: #FAF9F6;">₹ INR</div>
+          <div style="padding: 3px 9px; font-size: 12px; color: #6B665D; border-left: 1px solid #DCD7CD;">$ USD</div>
+        </div>
+        <div style="display: flex; align-items: center; gap: 7px; font-size: 12px; color: #6B665D;">
+          <div style="width: 6px; height: 6px; border-radius: 50%; background: #4A5D43; flex: none;"></div>
+          WebMCP live · 42 tools
+        </div>
+      </div>
+    </aside>
+    <main style="flex: 1; padding: 34px 52px 60px; min-width: 0;">
+      <div style="margin-bottom: 34px;">
+        <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.13em; color: #9C968A; font-weight: 500;">Net position</div>
+        <h1 style="font-size: 27px; font-weight: 600; letter-spacing: -0.015em; margin: 3px 0 0; text-wrap: balance;">Where you stand</h1>
+        <p style="color: #6B665D; font-size: 14px; margin: 5px 0 0; max-width: 62ch;">Everything you own, everything you owe, and what next month looks like.</p>
+      </div>
+      <div style="margin-bottom: 6px;">
+        <div style="font-family: 'IBM Plex Mono', ui-monospace, Menlo, monospace; font-size: 47px; font-weight: 500; color: #23211E; letter-spacing: -0.035em; line-height: 1.05;">₹48.19L</div>
+        <p style="color: #6B665D; font-size: 14px; margin: 7px 0 0;"><b style="font-weight:500;color:#23211E">₹1.20Cr</b> in assets against <b style="font-weight:500;color:#23211E">₹71.69L</b> of debt</p>
+      </div>
+
+      <div style="display: flex; height: 7px; margin: 22px 0 9px; border-radius: 2px; overflow: hidden; background: #EDEAE3;">
+        <div style="width: 79.2%; background: #4A5D43;"></div>
+        <div style="width: 13.3%; background: #7C8F73;"></div>
+        <div style="width: 7.5%; background: #C9C3B4;"></div>
+      </div>
+      <div style="display: flex; gap: 18px; flex-wrap: wrap; font-size: 12.5px; color: #6B665D;">
+        <span style="display: inline-flex; align-items: center; gap: 6px;"><span style="width:7px;height:7px;border-radius:1px;background:#4A5D43;"></span>Property ₹95.00L</span>
+        <span style="display: inline-flex; align-items: center; gap: 6px;"><span style="width:7px;height:7px;border-radius:1px;background:#7C8F73;"></span>Investable ₹15.88L</span>
+        <span style="display: inline-flex; align-items: center; gap: 6px;"><span style="width:7px;height:7px;border-radius:1px;background:#C9C3B4;"></span>Cash ₹9.00L</span>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); margin: 36px 0; border-top: 1px solid #DCD7CD;">
+        <div style="padding: 15px 18px 15px 0; border-bottom: 1px solid #E6E2DA;">
+          <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.13em; color: #9C968A; font-weight: 500;">Monthly surplus</div>
+          <div style="font-family: 'IBM Plex Mono', ui-monospace, Menlo, monospace; font-size: 21px; font-weight: 500; margin-top: 5px; letter-spacing: -0.02em; color: #23211E;">₹70.22K</div>
+          <div style="font-size: 12px; color: #9C968A; margin-top: 2px;">24.6% of income</div>
+        </div>
+        <div style="padding: 15px 18px 15px 0; border-bottom: 1px solid #E6E2DA;">
+          <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.13em; color: #9C968A; font-weight: 500;">Runway</div>
+          <div style="font-family: 'IBM Plex Mono', ui-monospace, Menlo, monospace; font-size: 21px; font-weight: 500; margin-top: 5px; letter-spacing: -0.02em; color: #A8543A;">4.9 mo</div>
+          <div style="font-size: 12px; color: #9C968A; margin-top: 2px;">six is the usual floor</div>
+        </div>
+        <div style="padding: 15px 18px 15px 0; border-bottom: 1px solid #E6E2DA;">
+          <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.13em; color: #9C968A; font-weight: 500;">Debt service</div>
+          <div style="font-family: 'IBM Plex Mono', ui-monospace, Menlo, monospace; font-size: 21px; font-weight: 500; margin-top: 5px; letter-spacing: -0.02em; color: #23211E;">32.6%</div>
+          <div style="font-size: 12px; color: #9C968A; margin-top: 2px;">of income to EMIs</div>
+        </div>
+        <div style="padding: 15px 18px 15px 0; border-bottom: 1px solid #E6E2DA;">
+          <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.13em; color: #9C968A; font-weight: 500;">Exposure</div>
+          <div style="font-family: 'IBM Plex Mono', ui-monospace, Menlo, monospace; font-size: 21px; font-weight: 500; margin-top: 5px; letter-spacing: -0.02em; color: #23211E;">47<span style="font-size:13px;color:#9C968A">/100</span></div>
+          <div style="font-size: 12px; color: #9C968A; margin-top: 2px;">adequate</div>
+        </div>
+      </div>
+
+      <section>
+        <div style="display: flex; align-items: baseline; gap: 12px; padding-bottom: 9px; border-bottom: 1px solid #DCD7CD; margin-bottom: 4px;">
+          <h2 style="font-size: 15px; font-weight: 600; margin: 0;">Do this first</h2>
+          <div style="flex: 1;"></div>
+          <div style="font-size: 12.5px; color: #4A5D43;">All advice →</div>
+        </div>
+        <div style="border-left: 2px solid #A8543A; padding: 2px 0 2px 16px; margin-top: 6px;">
+          <h3 style="font-size: 15.5px; font-weight: 600; margin: 0;">Clear the credit card before anything else</h3>
+          <p style="color: #6B665D; font-size: 13.5px; margin: 5px 0 0; max-width: 60ch;">At 38% this debt costs more than three times what the portfolio is assumed to earn. Every unit put against it earns a guaranteed 38%, which no investment can promise. Clearing it removes ₹63.08K of scheduled interest.</p>
+          <p style="font-size: 11.5px; color: #9C968A; margin: 8px 0 0; font-family: 'IBM Plex Mono', ui-monospace, Menlo, monospace;">loan_list · advisor_prepay_vs_invest</p>
+        </div>
+      </section>
+
+      <section style="margin-top: 40px;">
+        <div style="display: flex; align-items: baseline; gap: 12px; padding-bottom: 9px; border-bottom: 1px solid #DCD7CD; margin-bottom: 4px;">
+          <h2 style="font-size: 15px; font-weight: 600; margin: 0;">What you owe</h2>
+          <div style="flex: 1;"></div>
+          <div style="font-size: 12.5px; color: #4A5D43;">Detail →</div>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr auto; gap: 4px 20px; padding: 13px 0; border-bottom: 1px solid #E6E2DA; align-items: baseline;">
+          <div style="font-weight: 500; font-size: 14.5px; display: flex; align-items: baseline; gap: 8px;"><span>Home loan — Sector 62 flat</span></div>
+          <div style="font-family: 'IBM Plex Mono', ui-monospace, Menlo, monospace; font-size: 15px;">₹61.07L</div>
+          <div style="grid-column: 1 / -1; display: flex; gap: 16px; flex-wrap: wrap; font-size: 12.5px; color: #6B665D; margin-top: 1px;"><span>8.6%</span><span>EMI <b style="font-family: 'IBM Plex Mono', ui-monospace, Menlo, monospace; font-weight: 500; color: #23211E; font-size: 12px;">₹56.82K</b></span><span>17 yr 2 mo left</span></div>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr auto; gap: 4px 20px; padding: 13px 0; border-bottom: 1px solid #E6E2DA; align-items: baseline;">
+          <div style="font-weight: 500; font-size: 14.5px; display: flex; align-items: baseline; gap: 8px;"><span>Car loan — Creta</span></div>
+          <div style="font-family: 'IBM Plex Mono', ui-monospace, Menlo, monospace; font-size: 15px;">₹8.97L</div>
+          <div style="grid-column: 1 / -1; display: flex; gap: 16px; flex-wrap: wrap; font-size: 12.5px; color: #6B665D; margin-top: 1px;"><span>9.4%</span><span>EMI <b style="font-family: 'IBM Plex Mono', ui-monospace, Menlo, monospace; font-weight: 500; color: #23211E; font-size: 12px;">₹25.14K</b></span><span>3 yr 6 mo left</span></div>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr auto; gap: 4px 20px; padding: 13px 0; border-bottom: 1px solid #E6E2DA; align-items: baseline;">
+          <div style="font-weight: 500; font-size: 14.5px; display: flex; align-items: baseline; gap: 8px;"><span>Credit card revolve</span><span style="color: #A8543A; font-size: 11px; text-transform: uppercase; letter-spacing: 0.09em; font-weight: 600;">costly</span></div>
+          <div style="font-family: 'IBM Plex Mono', ui-monospace, Menlo, monospace; font-size: 15px;">₹1.64L</div>
+          <div style="grid-column: 1 / -1; display: flex; gap: 16px; flex-wrap: wrap; font-size: 12.5px; color: #6B665D; margin-top: 1px;"><span>38.0%</span><span>EMI <b style="font-family: 'IBM Plex Mono', ui-monospace, Menlo, monospace; font-weight: 500; color: #23211E; font-size: 12px;">₹10.82K</b></span><span>1 yr 9 mo left</span></div>
+        </div>
+      </section>
+    </main>
+    <aside style="width: 296px; flex: none; border-left: 1px solid #DCD7CD; padding: 26px 22px; background: #EDEAE3; display: flex; flex-direction: column; gap: 26px;">
+      <div>
+        <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.13em; color: #9C968A; font-weight: 500;">Waiting on you</div>
+        <div style="background: #FAF9F6; border: 1px solid #C98A72; border-radius: 4px; padding: 14px; margin-top: 10px;">
+          <div style="font-size: 14px; font-weight: 600;">Prepay ₹1.64L into the credit card</div>
+          <div style="font-size: 12.5px; color: #6B665D; margin-top: 5px;">38% is the most expensive money on your balance sheet.</div>
+          <div style="display: flex; flex-direction: column; gap: 4px; margin-top: 10px; font-family: 'IBM Plex Mono', ui-monospace, Menlo, monospace; font-size: 12px; color: #6B665D;">
+            <div style="display: flex; justify-content: space-between; gap: 10px;"><span style="color: #23211E;">Outstanding</span><span>₹1.64L → ₹0</span></div>
+            <div style="display: flex; justify-content: space-between; gap: 10px;"><span style="color: #23211E;">Interest saved</span><span>₹63.08K</span></div>
+            <div style="display: flex; justify-content: space-between; gap: 10px;"><span style="color: #23211E;">Cash</span><span>₹9.00L → ₹7.36L</span></div>
+          </div>
+          <div style="display: flex; gap: 7px; margin-top: 13px;">
+            <div style="background: #4A5D43; border: 1px solid #4A5D43; color: #FAF9F6; border-radius: 3px; padding: 5px 11px; font-size: 12.5px; font-weight: 500;">Approve</div>
+            <div style="border: 1px solid #DCD7CD; border-radius: 3px; padding: 5px 11px; font-size: 12.5px; color: #6B665D;">Reject</div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.13em; color: #9C968A; font-weight: 500;">Agent activity</div>
+        <div style="display: flex; flex-direction: column; margin-top: 4px;">
+        <div style="padding: 10px 0; border-bottom: 1px solid #E6E2DA;">
+          <div style="font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: #A8543A; font-weight: 600;">Proposed</div>
+          <div style="font-family: 'IBM Plex Mono', ui-monospace, Menlo, monospace; font-size: 12px; margin-top: 2px;">loan_propose_prepayment</div>
+          <div style="color: #6B665D; font-size: 12px; margin-top: 1px;">loanId=loan_card, lumpSum=164147</div>
+        </div>
+        <div style="padding: 10px 0; border-bottom: 1px solid #E6E2DA;">
+          <div style="font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: #9C968A; font-weight: 600;">Read</div>
+          <div style="font-family: 'IBM Plex Mono', ui-monospace, Menlo, monospace; font-size: 12px; margin-top: 2px;">advisor_prepay_vs_invest</div>
+          <div style="color: #6B665D; font-size: 12px; margin-top: 1px;">amount=300000, horizonMonths=60</div>
+        </div>
+        <div style="padding: 10px 0; border-bottom: 1px solid #E6E2DA;">
+          <div style="font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: #9C968A; font-weight: 600;">Read</div>
+          <div style="font-family: 'IBM Plex Mono', ui-monospace, Menlo, monospace; font-size: 12px; margin-top: 2px;">budget_summary</div>
+          <div style="color: #6B665D; font-size: 12px; margin-top: 1px;">called</div>
+        </div>
+        <div style="padding: 10px 0; border-bottom: none;">
+          <div style="font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: #9C968A; font-weight: 600;">Read</div>
+          <div style="font-family: 'IBM Plex Mono', ui-monospace, Menlo, monospace; font-size: 12px; margin-top: 2px;">loan_list</div>
+          <div style="color: #6B665D; font-size: 12px; margin-top: 1px;">called</div>
+        </div>
+        </div>
+      </div>
+    </aside>
+</div>
+</x-dc>
+</body>
+</html>

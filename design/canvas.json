@@ -1,0 +1,58 @@
+{
+ "artboards": [
+  {
+   "file": "Main.dc.html",
+   "x": 0,
+   "y": 0,
+   "w": 1440,
+   "h": 1100
+  },
+  {
+   "file": "Debt.dc.html",
+   "x": 1550,
+   "y": 0,
+   "w": 1440,
+   "h": 1100
+  },
+  {
+   "file": "Investments.dc.html",
+   "x": 3100,
+   "y": 0,
+   "w": 1440,
+   "h": 1100
+  },
+  {
+   "file": "Cashflow.dc.html",
+   "x": 0,
+   "y": 1250,
+   "w": 1440,
+   "h": 1100
+  },
+  {
+   "file": "Advice.dc.html",
+   "x": 1550,
+   "y": 1250,
+   "w": 1440,
+   "h": 1100
+  }
+ ],
+ "annotations": [
+  {
+   "id": "brief",
+   "x": 0,
+   "y": -190,
+   "w": 620,
+   "text": "Fin·Esse — page-wise layout, warm editorial.\nBone ground, warm charcoal ink, moss accent, clay for anything wrong.\nSchibsted Grotesk for text, IBM Plex Mono for every figure.\nAll numbers are real output from the app's engine, not placeholders."
+  },
+  {
+   "id": "rail-note",
+   "x": 3210,
+   "y": 0,
+   "w": 300,
+   "text": "The agent rail is pinned on every page — approvals and the live tool trail are global state, not a page.\n\nOnly the approval gets card chrome: it is the one thing asking you to act."
+  }
+ ],
+ "launch": {
+  "view": "canvas"
+ }
+}
