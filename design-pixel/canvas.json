@@ -1,0 +1,61 @@
+{
+ "artboards": [
+  {
+   "file": "Main.dc.html",
+   "x": 0,
+   "y": 0,
+   "w": 1280,
+   "h": 880,
+   "title": "A — Cozy Save File"
+  },
+  {
+   "file": "Terminal.dc.html",
+   "x": 1410,
+   "y": 0,
+   "w": 1280,
+   "h": 880,
+   "title": "B — Terminal Quest"
+  },
+  {
+   "file": "Arcade.dc.html",
+   "x": 2820,
+   "y": 0,
+   "w": 1280,
+   "h": 880,
+   "title": "C — Arcade Ledger"
+  }
+ ],
+ "annotations": [
+  {
+   "id": "brief",
+   "x": 0,
+   "y": -230,
+   "w": 700,
+   "text": "Three pixel worlds, same screen. Pick one and I build the other five pages in it.\n\nAll three cut the old Overview from 15 competing blocks to five: net worth, four vitals, one decision, one agent log. Wording is plain — 'Free each month', not 'Monthly surplus'."
+  },
+  {
+   "id": "a",
+   "x": 0,
+   "y": 930,
+   "w": 380,
+   "text": "A — COZY SAVE FILE\nChunky borders, hard offset shadows, warm cream. Pixelify Sans + Figtree.\n\nFriendliest, and best fit for 'refreshes the user'. Risk: cosy can read as unserious for money."
+  },
+  {
+   "id": "b",
+   "x": 1410,
+   "y": 930,
+   "w": 380,
+   "text": "B — TERMINAL QUEST\nDark CRT with scanlines, corner brackets, segmented bars. VT323 + Manrope.\n\nMost obviously a game, and the agent log feels native here. Risk: dark + neon is close to what you already rejected."
+  },
+  {
+   "id": "c",
+   "x": 2820,
+   "y": 930,
+   "w": 380,
+   "text": "C — ARCADE LEDGER\nHigh contrast, 3px black rules, huge blocky numerals, one red accent. Silkscreen + Plus Jakarta Sans.\n\nSleekest and most legible. Risk: the most restrained — least 'game', most poster."
+  }
+ ],
+ "launch": {
+  "view": "canvas"
+ }
+}

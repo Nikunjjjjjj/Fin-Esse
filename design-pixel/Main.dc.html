@@ -1,0 +1,127 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;600&amp;family=Figtree:wght@400;500;600;700&amp;display=swap">
+  <style>
+    body { margin:0; background:#FBF4E6; color:#3B3328;
+      font-family:'Figtree','Helvetica Neue',Arial,sans-serif; }
+    * { box-sizing:border-box; }
+    a { color:#6E9B5A; text-decoration:none; } a:hover { color:#3B3328; }
+    .px { font-family:'Pixelify Sans','Courier New',monospace;
+      -webkit-font-smoothing:none; -moz-osx-font-smoothing:grayscale; }
+    .box { background:#FFFDF7; border:3px solid #3B3328; box-shadow:5px 5px 0 #3B3328; }
+    .tab { border:3px solid #3B3328; background:#FFFDF7; padding:9px 16px; font-size:15px;
+      box-shadow:3px 3px 0 #3B3328; }
+    .tab.on { background:#3B3328; color:#FBF4E6; box-shadow:3px 3px 0 #6E9B5A; }
+  </style>
+</helmet>
+<div style="width:1280px; min-height:880px; background:#FBF4E6; padding:30px 36px; display:flex; flex-direction:column; gap:24px;">
+
+  <div style="display:flex; align-items:center; gap:16px;">
+    <div class="px" style="font-size:30px; letter-spacing:.02em;">Fin<span style="color:#6E9B5A;">·</span>Esse</div>
+    <div style="flex:1;"></div>
+    <div style="display:flex; align-items:center; gap:8px; border:3px solid #3B3328; background:#FFFDF7; padding:6px 12px; box-shadow:3px 3px 0 #3B3328;">
+      <svg width="14" height="14" viewBox="0 0 8 8" fill="#6E9B5A" shape-rendering="crispEdges" style="flex:none;"><rect x="4" y="0" width="1" height="1"/><rect x="3" y="1" width="1" height="1"/><rect x="4" y="1" width="1" height="1"/><rect x="2" y="2" width="1" height="1"/><rect x="3" y="2" width="1" height="1"/><rect x="4" y="2" width="1" height="1"/><rect x="0" y="3" width="1" height="1"/><rect x="1" y="3" width="1" height="1"/><rect x="2" y="3" width="1" height="1"/><rect x="3" y="3" width="1" height="1"/><rect x="4" y="3" width="1" height="1"/><rect x="5" y="3" width="1" height="1"/><rect x="6" y="3" width="1" height="1"/><rect x="1" y="4" width="1" height="1"/><rect x="2" y="4" width="1" height="1"/><rect x="3" y="4" width="1" height="1"/><rect x="4" y="4" width="1" height="1"/><rect x="5" y="4" width="1" height="1"/><rect x="3" y="5" width="1" height="1"/><rect x="4" y="5" width="1" height="1"/><rect x="5" y="5" width="1" height="1"/><rect x="2" y="6" width="1" height="1"/><rect x="3" y="6" width="1" height="1"/><rect x="1" y="7" width="1" height="1"/></svg><span style="font-size:13px; font-weight:600;">Agent connected</span>
+    </div>
+  </div>
+
+  <div style="display:flex; gap:10px;">
+    <div class="tab on">Overview</div><div class="tab">Debt</div><div class="tab">Investments</div><div class="tab">Cashflow</div><div class="tab">Advice</div>
+  </div>
+
+  <div style="display:grid; grid-template-columns:1.35fr 1fr; gap:24px; align-items:start;">
+    <div style="display:flex; flex-direction:column; gap:22px;">
+
+      <div class="box" style="padding:26px 28px;">
+        <div style="font-size:13px; letter-spacing:.09em; text-transform:uppercase; color:#7A6E5D; font-weight:600;">Everything you own, minus everything you owe</div>
+        <div class="px" style="font-size:62px; line-height:1.05; margin-top:10px;">₹48.19L</div>
+        <div style="display:flex; height:16px; margin-top:18px; border:3px solid #3B3328;">
+          <div style="width:79%; background:#6E9B5A;"></div>
+          <div style="width:13%; background:#5B8FC7;"></div>
+          <div style="width:8%; background:#D9A441;"></div>
+        </div>
+        <div style="display:flex; gap:18px; margin-top:10px; font-size:13px; color:#7A6E5D;">
+          <span style="display:flex; align-items:center; gap:6px;"><span style="width:11px;height:11px;background:#6E9B5A;border:2px solid #3B3328;"></span>Home ₹95L</span>
+          <span style="display:flex; align-items:center; gap:6px;"><span style="width:11px;height:11px;background:#5B8FC7;border:2px solid #3B3328;"></span>Invested ₹15.9L</span>
+          <span style="display:flex; align-items:center; gap:6px;"><span style="width:11px;height:11px;background:#D9A441;border:2px solid #3B3328;"></span>Cash ₹9L</span>
+        </div>
+      </div>
+
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:18px;">
+        <div class="box" style="padding:16px; display:flex; flex-direction:column; gap:8px;">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <svg width="16" height="16" viewBox="0 0 8 8" fill="#6E9B5A" shape-rendering="crispEdges" style="flex:none;"><rect x="2" y="0" width="1" height="1"/><rect x="3" y="0" width="1" height="1"/><rect x="4" y="0" width="1" height="1"/><rect x="5" y="0" width="1" height="1"/><rect x="1" y="1" width="1" height="1"/><rect x="6" y="1" width="1" height="1"/><rect x="0" y="2" width="1" height="1"/><rect x="3" y="2" width="1" height="1"/><rect x="4" y="2" width="1" height="1"/><rect x="7" y="2" width="1" height="1"/><rect x="0" y="3" width="1" height="1"/><rect x="2" y="3" width="1" height="1"/><rect x="5" y="3" width="1" height="1"/><rect x="7" y="3" width="1" height="1"/><rect x="0" y="4" width="1" height="1"/><rect x="2" y="4" width="1" height="1"/><rect x="5" y="4" width="1" height="1"/><rect x="7" y="4" width="1" height="1"/><rect x="0" y="5" width="1" height="1"/><rect x="3" y="5" width="1" height="1"/><rect x="4" y="5" width="1" height="1"/><rect x="7" y="5" width="1" height="1"/><rect x="1" y="6" width="1" height="1"/><rect x="6" y="6" width="1" height="1"/><rect x="2" y="7" width="1" height="1"/><rect x="3" y="7" width="1" height="1"/><rect x="4" y="7" width="1" height="1"/><rect x="5" y="7" width="1" height="1"/></svg>
+          <span style="font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:#7A6E5D; font-weight:600;">Free each month</span>
+        </div>
+        <div class="px" style="font-size:30px; line-height:1;">₹70.2K</div>
+        <div style="font-size:12.5px; color:#A99B85;">after everything is paid</div>
+      </div>
+        <div class="box" style="padding:16px; display:flex; flex-direction:column; gap:8px;">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <svg width="16" height="16" viewBox="0 0 8 8" fill="#C4614B" shape-rendering="crispEdges" style="flex:none;"><rect x="3" y="0" width="1" height="1"/><rect x="4" y="0" width="1" height="1"/><rect x="3" y="1" width="1" height="1"/><rect x="4" y="1" width="1" height="1"/><rect x="2" y="2" width="1" height="1"/><rect x="3" y="2" width="1" height="1"/><rect x="4" y="2" width="1" height="1"/><rect x="5" y="2" width="1" height="1"/><rect x="2" y="3" width="1" height="1"/><rect x="3" y="3" width="1" height="1"/><rect x="4" y="3" width="1" height="1"/><rect x="5" y="3" width="1" height="1"/><rect x="1" y="4" width="1" height="1"/><rect x="2" y="4" width="1" height="1"/><rect x="3" y="4" width="1" height="1"/><rect x="4" y="4" width="1" height="1"/><rect x="5" y="4" width="1" height="1"/><rect x="6" y="4" width="1" height="1"/><rect x="1" y="5" width="1" height="1"/><rect x="2" y="5" width="1" height="1"/><rect x="5" y="5" width="1" height="1"/><rect x="6" y="5" width="1" height="1"/><rect x="0" y="6" width="1" height="1"/><rect x="1" y="6" width="1" height="1"/><rect x="2" y="6" width="1" height="1"/><rect x="3" y="6" width="1" height="1"/><rect x="4" y="6" width="1" height="1"/><rect x="5" y="6" width="1" height="1"/><rect x="6" y="6" width="1" height="1"/><rect x="7" y="6" width="1" height="1"/><rect x="2" y="7" width="1" height="1"/><rect x="3" y="7" width="1" height="1"/><rect x="4" y="7" width="1" height="1"/><rect x="5" y="7" width="1" height="1"/></svg>
+          <span style="font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:#7A6E5D; font-weight:600;">Safety net</span>
+        </div>
+        <div class="px" style="font-size:30px; line-height:1;">4.9 mo</div>
+        <div style="font-size:12.5px; color:#A99B85;">aim for 6 months</div>
+      </div>
+        <div class="box" style="padding:16px; display:flex; flex-direction:column; gap:8px;">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <svg width="16" height="16" viewBox="0 0 8 8" fill="#5B8FC7" shape-rendering="crispEdges" style="flex:none;"><rect x="3" y="0" width="1" height="1"/><rect x="4" y="0" width="1" height="1"/><rect x="2" y="1" width="1" height="1"/><rect x="3" y="1" width="1" height="1"/><rect x="4" y="1" width="1" height="1"/><rect x="5" y="1" width="1" height="1"/><rect x="1" y="2" width="1" height="1"/><rect x="2" y="2" width="1" height="1"/><rect x="3" y="2" width="1" height="1"/><rect x="4" y="2" width="1" height="1"/><rect x="5" y="2" width="1" height="1"/><rect x="6" y="2" width="1" height="1"/><rect x="0" y="3" width="1" height="1"/><rect x="1" y="3" width="1" height="1"/><rect x="2" y="3" width="1" height="1"/><rect x="3" y="3" width="1" height="1"/><rect x="4" y="3" width="1" height="1"/><rect x="5" y="3" width="1" height="1"/><rect x="6" y="3" width="1" height="1"/><rect x="7" y="3" width="1" height="1"/><rect x="0" y="4" width="1" height="1"/><rect x="1" y="4" width="1" height="1"/><rect x="6" y="4" width="1" height="1"/><rect x="7" y="4" width="1" height="1"/><rect x="0" y="5" width="1" height="1"/><rect x="1" y="5" width="1" height="1"/><rect x="3" y="5" width="1" height="1"/><rect x="4" y="5" width="1" height="1"/><rect x="6" y="5" width="1" height="1"/><rect x="7" y="5" width="1" height="1"/><rect x="0" y="6" width="1" height="1"/><rect x="1" y="6" width="1" height="1"/><rect x="3" y="6" width="1" height="1"/><rect x="4" y="6" width="1" height="1"/><rect x="6" y="6" width="1" height="1"/><rect x="7" y="6" width="1" height="1"/><rect x="0" y="7" width="1" height="1"/><rect x="1" y="7" width="1" height="1"/><rect x="3" y="7" width="1" height="1"/><rect x="4" y="7" width="1" height="1"/><rect x="6" y="7" width="1" height="1"/><rect x="7" y="7" width="1" height="1"/></svg>
+          <span style="font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:#7A6E5D; font-weight:600;">Goes to loans</span>
+        </div>
+        <div class="px" style="font-size:30px; line-height:1;">32.6%</div>
+        <div style="font-size:12.5px; color:#A99B85;">of what you earn</div>
+      </div>
+        <div class="box" style="padding:16px; display:flex; flex-direction:column; gap:8px;">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <svg width="16" height="16" viewBox="0 0 8 8" fill="#D9A441" shape-rendering="crispEdges" style="flex:none;"><rect x="6" y="1" width="1" height="1"/><rect x="7" y="1" width="1" height="1"/><rect x="4" y="2" width="1" height="1"/><rect x="5" y="2" width="1" height="1"/><rect x="6" y="2" width="1" height="1"/><rect x="7" y="2" width="1" height="1"/><rect x="2" y="3" width="1" height="1"/><rect x="3" y="3" width="1" height="1"/><rect x="4" y="3" width="1" height="1"/><rect x="5" y="3" width="1" height="1"/><rect x="6" y="3" width="1" height="1"/><rect x="7" y="3" width="1" height="1"/><rect x="2" y="4" width="1" height="1"/><rect x="3" y="4" width="1" height="1"/><rect x="4" y="4" width="1" height="1"/><rect x="5" y="4" width="1" height="1"/><rect x="6" y="4" width="1" height="1"/><rect x="7" y="4" width="1" height="1"/><rect x="0" y="5" width="1" height="1"/><rect x="1" y="5" width="1" height="1"/><rect x="2" y="5" width="1" height="1"/><rect x="3" y="5" width="1" height="1"/><rect x="4" y="5" width="1" height="1"/><rect x="5" y="5" width="1" height="1"/><rect x="6" y="5" width="1" height="1"/><rect x="7" y="5" width="1" height="1"/><rect x="0" y="6" width="1" height="1"/><rect x="1" y="6" width="1" height="1"/><rect x="2" y="6" width="1" height="1"/><rect x="3" y="6" width="1" height="1"/><rect x="4" y="6" width="1" height="1"/><rect x="5" y="6" width="1" height="1"/><rect x="6" y="6" width="1" height="1"/><rect x="7" y="6" width="1" height="1"/><rect x="0" y="7" width="1" height="1"/><rect x="1" y="7" width="1" height="1"/><rect x="2" y="7" width="1" height="1"/><rect x="3" y="7" width="1" height="1"/><rect x="4" y="7" width="1" height="1"/><rect x="5" y="7" width="1" height="1"/><rect x="6" y="7" width="1" height="1"/><rect x="7" y="7" width="1" height="1"/></svg>
+          <span style="font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:#7A6E5D; font-weight:600;">Overall health</span>
+        </div>
+        <div class="px" style="font-size:30px; line-height:1;">47/100</div>
+        <div style="font-size:12.5px; color:#A99B85;">holding up</div>
+      </div>
+      </div>
+    </div>
+
+    <div style="display:flex; flex-direction:column; gap:22px;">
+
+      <div class="box" style="padding:0; box-shadow:5px 5px 0 #C4614B; border-color:#3B3328;">
+        <div style="background:#C4614B; color:#FBF4E6; padding:10px 18px; display:flex; align-items:center; gap:9px; border-bottom:3px solid #3B3328;">
+          <svg width="14" height="14" viewBox="0 0 8 8" fill="#FBF4E6" shape-rendering="crispEdges" style="flex:none;"><rect x="3" y="0" width="1" height="1"/><rect x="4" y="0" width="1" height="1"/><rect x="3" y="1" width="1" height="1"/><rect x="4" y="1" width="1" height="1"/><rect x="2" y="2" width="1" height="1"/><rect x="3" y="2" width="1" height="1"/><rect x="4" y="2" width="1" height="1"/><rect x="5" y="2" width="1" height="1"/><rect x="2" y="3" width="1" height="1"/><rect x="3" y="3" width="1" height="1"/><rect x="4" y="3" width="1" height="1"/><rect x="5" y="3" width="1" height="1"/><rect x="1" y="4" width="1" height="1"/><rect x="2" y="4" width="1" height="1"/><rect x="3" y="4" width="1" height="1"/><rect x="4" y="4" width="1" height="1"/><rect x="5" y="4" width="1" height="1"/><rect x="6" y="4" width="1" height="1"/><rect x="1" y="5" width="1" height="1"/><rect x="2" y="5" width="1" height="1"/><rect x="5" y="5" width="1" height="1"/><rect x="6" y="5" width="1" height="1"/><rect x="0" y="6" width="1" height="1"/><rect x="1" y="6" width="1" height="1"/><rect x="2" y="6" width="1" height="1"/><rect x="3" y="6" width="1" height="1"/><rect x="4" y="6" width="1" height="1"/><rect x="5" y="6" width="1" height="1"/><rect x="6" y="6" width="1" height="1"/><rect x="7" y="6" width="1" height="1"/><rect x="2" y="7" width="1" height="1"/><rect x="3" y="7" width="1" height="1"/><rect x="4" y="7" width="1" height="1"/><rect x="5" y="7" width="1" height="1"/></svg><span class="px" style="font-size:17px;">Your call</span>
+        </div>
+        <div style="padding:18px;">
+          <div style="font-size:17px; font-weight:700; line-height:1.35;">Pay off the credit card?</div>
+          <div style="font-size:13.5px; color:#7A6E5D; margin-top:7px; line-height:1.5;">It charges 38% a year — more than three times what your investments earn. Clearing it saves ₹63,080 in interest.</div>
+          <div style="margin-top:14px; border:3px solid #3B3328; background:#FBF4E6;">
+            <div style="display:flex; justify-content:space-between; padding:8px 12px; font-size:13px; border-bottom:2px solid #3B3328;"><span>Card balance</span><span class="px">₹1.64L → ₹0</span></div>
+            <div style="display:flex; justify-content:space-between; padding:8px 12px; font-size:13px;"><span>Your cash</span><span class="px">₹9L → ₹7.36L</span></div>
+          </div>
+          <div style="display:flex; gap:10px; margin-top:16px;">
+            <div style="flex:1; text-align:center; background:#6E9B5A; color:#FBF4E6; border:3px solid #3B3328; box-shadow:3px 3px 0 #3B3328; padding:10px; font-size:15px; font-weight:700;">Do it</div>
+            <div style="flex:1; text-align:center; background:#FFFDF7; border:3px solid #3B3328; box-shadow:3px 3px 0 #3B3328; padding:10px; font-size:15px; font-weight:700;">Not now</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="box" style="padding:16px 18px;">
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px;">
+          <svg width="14" height="14" viewBox="0 0 8 8" fill="#5B8FC7" shape-rendering="crispEdges" style="flex:none;"><rect x="4" y="0" width="1" height="1"/><rect x="3" y="1" width="1" height="1"/><rect x="4" y="1" width="1" height="1"/><rect x="2" y="2" width="1" height="1"/><rect x="3" y="2" width="1" height="1"/><rect x="4" y="2" width="1" height="1"/><rect x="0" y="3" width="1" height="1"/><rect x="1" y="3" width="1" height="1"/><rect x="2" y="3" width="1" height="1"/><rect x="3" y="3" width="1" height="1"/><rect x="4" y="3" width="1" height="1"/><rect x="5" y="3" width="1" height="1"/><rect x="6" y="3" width="1" height="1"/><rect x="1" y="4" width="1" height="1"/><rect x="2" y="4" width="1" height="1"/><rect x="3" y="4" width="1" height="1"/><rect x="4" y="4" width="1" height="1"/><rect x="5" y="4" width="1" height="1"/><rect x="3" y="5" width="1" height="1"/><rect x="4" y="5" width="1" height="1"/><rect x="5" y="5" width="1" height="1"/><rect x="2" y="6" width="1" height="1"/><rect x="3" y="6" width="1" height="1"/><rect x="1" y="7" width="1" height="1"/></svg><span class="px" style="font-size:16px;">What the agent did</span>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:9px; font-size:13px;">
+          <div style="display:flex; gap:9px;"><span style="color:#C4614B; font-weight:700; min-width:64px;">asked you</span><span style="color:#7A6E5D;">to clear the card</span></div>
+          <div style="display:flex; gap:9px;"><span style="color:#5B8FC7; font-weight:700; min-width:64px;">worked out</span><span style="color:#7A6E5D;">prepay vs invest, ₹3L</span></div>
+          <div style="display:flex; gap:9px;"><span style="color:#A99B85; font-weight:700; min-width:64px;">read</span><span style="color:#7A6E5D;">your loans and budget</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>
