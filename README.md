@@ -116,6 +116,12 @@ link degrades into a boring profile rather than a broken app.
 
 ---
 
+## Recording the demo
+
+`docs/VIDEO-GUIDE.md` is a shot-by-shot production guide written for someone
+who has never seen the app or read any code — what to say, what to type, what
+appears on screen, and what to do when the agent misbehaves.
+
 ## Tool reference
 
 45 tools in five groups. Prefixes are organisational — there is one agent.
