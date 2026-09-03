@@ -44,13 +44,17 @@ your finances the conclusion was actually built from.
 
 ## What makes it different
 
-**Agents propose; humans decide.** Consequential tools cannot change anything.
-When the agent decides you should prepay the credit card, it does not prepay
-the credit card — it queues a proposal card showing the full before-and-after,
-and waits. The profile changes only when a person clicks Approve. Rejecting
-leaves it byte-identical. This is the whole difference between an agent that
-can act on your money and one that can ask to, and it is enforced in the
-architecture rather than in a prompt.
+**Agents propose; humans decide.** No agent-initiated change to your financial
+data can reach the profile without you approving it — not one of the fourteen
+write tools. When the agent decides you should prepay the credit card, it does
+not prepay the credit card; it queues a proposal showing the full
+before-and-after and waits. Rejecting leaves the profile byte-identical.
+
+This is enforced in the architecture, not in a prompt, and tested as a
+property of the whole tool set, so a tool added later cannot quietly opt out.
+The single exception is deliberate: inside a what-if branch writes apply
+immediately, because the branch is itself discardable — asking consent for
+each step of a throwaway exploration would be ceremony without protection.
 
 **The tool surface is gated on state.** `loan_simulate_prepayment` does not
 exist until you have a loan. The what-if open and close tools are mutually
@@ -120,7 +124,8 @@ React tree and need direct access to the same live state the UI renders.
 42 tools in four groups (`loan_*`, `portfolio_*`, `budget_*`, `advisor_*`)
 over a deterministic financial engine — EMI and amortisation, allocation and
 rebalancing, cashflow and goal feasibility, and the cross-domain advisor.
-68 tests.
+94 tests, including a table-driven one asserting that every financial write
+tool leaves the profile byte-identical until a human approves.
 
 A compatibility shim resolves `document.modelContext`, then
 `navigator.modelContext` (deprecated in Chromium 150), then the legacy

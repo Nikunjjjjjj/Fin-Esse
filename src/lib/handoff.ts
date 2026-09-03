@@ -112,7 +112,10 @@ export function sanitizeProfile(raw: unknown): Profile {
   const budget = (p.budget ?? {}) as Record<string, unknown>;
 
   return {
-    currency: text(p.currency, 8) || "INR",
+    currency: text(p.currency, 8) === "USD" ? "USD" : "INR",
+    // A received position is somebody's real data, never sample data, however
+    // the sender's copy was flagged.
+    isSample: false,
     expectedPortfolioReturnPct: num(p.expectedPortfolioReturnPct, 11, -20, 40),
     loans: list<Loan>(p.loans, (l, i) => ({
       id: text(l?.id, 40) || `loan_${i}`,

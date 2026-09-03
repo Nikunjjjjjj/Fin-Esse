@@ -69,6 +69,8 @@ export interface RealAsset {
 
 export interface Profile {
   currency: string;
+  /** True while the profile is untouched sample data, not the user's own. */
+  isSample: boolean;
   loans: Loan[];
   holdings: Holding[];
   realAssets: RealAsset[];

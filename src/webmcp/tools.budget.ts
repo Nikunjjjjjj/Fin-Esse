@@ -1,7 +1,7 @@
 import type { Expense, Goal } from "../types";
 import { assessAllGoals, cashflow, emergencyRunwayMonths, requiredMonthly } from "../lib/budget";
 import { money, months as fmtMonths, pct, round2 } from "../lib/money";
-import { getProfile, uid, updateProfile } from "../store/store";
+import { getProfile, proposeOrApply, uid, updateProfile } from "../store/store";
 import { S, requireNumber, result, type ToolSpec } from "./helpers";
 
 export const budgetTools: ToolSpec[] = [
@@ -36,9 +36,24 @@ export const budgetTools: ToolSpec[] = [
     execute: (i) => {
       const v = requireNumber(i.monthlyIncome, "monthlyIncome");
       if (v < 0) throw new Error("Income cannot be negative.");
-      updateProfile((p) => ({ ...p, budget: { ...p.budget, monthlyIncome: v } }));
+      const before = cashflow(getProfile().budget, getProfile().loans);
+      const outcome = proposeOrApply({
+        tool: "budget_set_income",
+        title: `Set monthly income to ${money(v)}`,
+        summary: "Change the income figure every cashflow calculation is derived from.",
+        effects: [
+          `Income ${money(before.monthlyIncome)} -> ${money(v)}`,
+          `Surplus ${money(before.surplus)}/mo -> ${money(v - before.totalExpenses - before.totalEmi)}/mo`,
+        ],
+        apply: (p) => ({ ...p, budget: { ...p.budget, monthlyIncome: v } }),
+      });
       const cf = cashflow(getProfile().budget, getProfile().loans);
-      return result(`Income set to ${money(v)}/mo. Surplus is now ${money(cf.surplus)}/mo.`, cf);
+      return result(
+        outcome.applied
+          ? `Income set to ${money(v)}/mo in the what-if branch. Surplus is now ${money(cf.surplus)}/mo.`
+          : `Proposed setting income to ${money(v)}/mo. Waiting for the user's approval — nothing has changed yet.`,
+        { ...cf, ...outcome },
+      );
     },
   },
   {
@@ -49,11 +64,23 @@ export const budgetTools: ToolSpec[] = [
     execute: (i) => {
       const v = requireNumber(i.cashReserve, "cashReserve");
       if (v < 0) throw new Error("Cash reserve cannot be negative.");
-      updateProfile((p) => ({ ...p, budget: { ...p.budget, cashReserve: v } }));
+      const runwayBefore = emergencyRunwayMonths(getProfile());
+      const outcome = proposeOrApply({
+        tool: "budget_set_cash_reserve",
+        title: `Set the cash reserve to ${money(v)}`,
+        summary: "Change the liquid cash that funds emergencies and prepayments.",
+        effects: [
+          `Cash ${money(getProfile().budget.cashReserve)} -> ${money(v)}`,
+          `Emergency runway ${Number.isFinite(runwayBefore) ? `${runwayBefore.toFixed(1)} months` : "unlimited"} -> recalculated on approval`,
+        ],
+        apply: (p) => ({ ...p, budget: { ...p.budget, cashReserve: v } }),
+      });
       const runway = emergencyRunwayMonths(getProfile());
       return result(
-        `Cash reserve set to ${money(v)}, which is ${Number.isFinite(runway) ? `${runway} months` : "unlimited"} of runway.`,
-        { cashReserve: v, emergencyRunwayMonths: runway },
+        outcome.applied
+          ? `Cash reserve set to ${money(v)} in the what-if branch, which is ${Number.isFinite(runway) ? `${runway} months` : "unlimited"} of runway.`
+          : `Proposed setting the cash reserve to ${money(v)}. Waiting for the user's approval.`,
+        { cashReserve: v, emergencyRunwayMonths: runway, ...outcome },
       );
     },
   },
@@ -78,11 +105,23 @@ export const budgetTools: ToolSpec[] = [
         amount,
         essential: i.essential !== false,
       };
-      updateProfile((p) => ({ ...p, budget: { ...p.budget, expenses: [...p.budget.expenses, e] } }));
+      const before = cashflow(getProfile().budget, getProfile().loans);
+      const outcome = proposeOrApply({
+        tool: "budget_add_expense",
+        title: `Add the expense "${e.name}"`,
+        summary: `Record ${money(e.amount)}/mo of ${e.essential ? "essential" : "discretionary"} spending.`,
+        effects: [
+          `Adds ${money(e.amount)}/mo of outgoings`,
+          `Surplus ${money(before.surplus)}/mo -> ${money(before.surplus - e.amount)}/mo`,
+        ],
+        apply: (p) => ({ ...p, budget: { ...p.budget, expenses: [...p.budget.expenses, e] } }),
+      });
       const cf = cashflow(getProfile().budget, getProfile().loans);
       return result(
-        `Added ${e.essential ? "essential" : "discretionary"} expense "${e.name}" at ${money(e.amount)}/mo. Surplus is now ${money(cf.surplus)}/mo.`,
-        { expense: e, surplus: cf.surplus },
+        outcome.applied
+          ? `Added ${e.essential ? "essential" : "discretionary"} expense "${e.name}" at ${money(e.amount)}/mo to the what-if branch. Surplus is now ${money(cf.surplus)}/mo.`
+          : `Proposed adding the expense "${e.name}" at ${money(e.amount)}/mo. Waiting for the user's approval.`,
+        { expense: e, surplus: cf.surplus, ...outcome },
       );
     },
   },
@@ -97,11 +136,22 @@ export const budgetTools: ToolSpec[] = [
       const key = String(i.expenseId);
       const e = getProfile().budget.expenses.find((x) => x.id === key || x.name === key);
       if (!e) throw new Error(`No expense matching "${key}".`);
-      updateProfile((p) => ({
-        ...p,
-        budget: { ...p.budget, expenses: p.budget.expenses.filter((x) => x.id !== e.id) },
-      }));
-      return result(`Removed "${e.name}" (${money(e.amount)}/mo).`, { removed: e.id });
+      const outcome = proposeOrApply({
+        tool: "budget_remove_expense",
+        title: `Remove the expense "${e.name}"`,
+        summary: `Stop counting ${money(e.amount)}/mo of spending.`,
+        effects: [`Frees ${money(e.amount)}/mo of surplus`],
+        apply: (p) => ({
+          ...p,
+          budget: { ...p.budget, expenses: p.budget.expenses.filter((x) => x.id !== e.id) },
+        }),
+      });
+      return result(
+        outcome.applied
+          ? `Removed "${e.name}" (${money(e.amount)}/mo) from the what-if branch.`
+          : `Proposed removing "${e.name}" (${money(e.amount)}/mo). Waiting for the user's approval.`,
+        { removed: e.id, ...outcome },
+      );
     },
   },
   {
@@ -129,12 +179,23 @@ export const budgetTools: ToolSpec[] = [
         targetMonths: monthsN,
         savedSoFar: Math.max(0, Number(i.savedSoFar ?? 0)),
       };
-      updateProfile((p) => ({ ...p, goals: [...p.goals, g] }));
-      const p = getProfile();
-      const need = requiredMonthly(g.targetAmount, g.savedSoFar, g.targetMonths, p.expectedPortfolioReturnPct);
+      const prof = getProfile();
+      const need = requiredMonthly(g.targetAmount, g.savedSoFar, g.targetMonths, prof.expectedPortfolioReturnPct);
+      const outcome = proposeOrApply({
+        tool: "budget_add_goal",
+        title: `Add the goal "${g.name}"`,
+        summary: `Target ${money(g.targetAmount)} within ${fmtMonths(g.targetMonths)}.`,
+        effects: [
+          `Requires ${money(need)}/mo at an assumed ${prof.expectedPortfolioReturnPct}% return`,
+          `Already set aside: ${money(g.savedSoFar)}`,
+        ],
+        apply: (p) => ({ ...p, goals: [...p.goals, g] }),
+      });
       return result(
-        `Added goal "${g.name}": ${money(g.targetAmount)} in ${fmtMonths(g.targetMonths)}, needing ${money(need)}/mo at an assumed ${p.expectedPortfolioReturnPct}% return.`,
-        { goal: g, requiredMonthly: need },
+        outcome.applied
+          ? `Added goal "${g.name}" to the what-if branch: ${money(g.targetAmount)} in ${fmtMonths(g.targetMonths)}, needing ${money(need)}/mo.`
+          : `Proposed adding the goal "${g.name}" (${money(g.targetAmount)} in ${fmtMonths(g.targetMonths)}, needing ${money(need)}/mo). Waiting for the user's approval.`,
+        { goal: g, requiredMonthly: need, ...outcome },
       );
     },
   },
@@ -149,8 +210,19 @@ export const budgetTools: ToolSpec[] = [
       const key = String(i.goalId);
       const g = getProfile().goals.find((x) => x.id === key || x.name === key);
       if (!g) throw new Error(`No goal matching "${key}".`);
-      updateProfile((p) => ({ ...p, goals: p.goals.filter((x) => x.id !== g.id) }));
-      return result(`Removed goal "${g.name}".`, { removed: g.id });
+      const outcome = proposeOrApply({
+        tool: "budget_remove_goal",
+        title: `Remove the goal "${g.name}"`,
+        summary: `Stop tracking a ${money(g.targetAmount)} target.`,
+        effects: [`Frees the monthly contribution this goal required`],
+        apply: (p) => ({ ...p, goals: p.goals.filter((x) => x.id !== g.id) }),
+      });
+      return result(
+        outcome.applied
+          ? `Removed goal "${g.name}" from the what-if branch.`
+          : `Proposed removing the goal "${g.name}". Waiting for the user's approval.`,
+        { removed: g.id, ...outcome },
+      );
     },
   },
   {
@@ -178,6 +250,10 @@ export const budgetTools: ToolSpec[] = [
       { expectedReturnPct: S.num("Assumed nominal annual return as a percentage, e.g. 11.") },
       ["expectedReturnPct"],
     ),
+    // Deliberately not gated behind approval: this changes a planning
+    // assumption, not a fact about the user's finances. Nothing they own or
+    // owe moves, only the projection, and making an agent seek consent to try
+    // a different assumption would stop it exploring honestly.
     execute: (i) => {
       const v = requireNumber(i.expectedReturnPct, "expectedReturnPct");
       if (v < -20 || v > 40) throw new Error("Expected return must be between -20% and 40%.");

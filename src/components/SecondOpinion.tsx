@@ -11,7 +11,11 @@ import { Panel } from "./common";
  */
 export function SecondOpinion() {
   const profile = useSelector((s) => s.profile);
-  const [amount, setAmount] = useState(300000);
+  // A sensible default depends on the currency: 3 lakh and 10 thousand are the
+  // same kind of "meaningful but not life-changing" sum in their own contexts.
+  const suggested = profile.currency === "USD" ? 10_000 : 300_000;
+  const [raw, setAmount] = useState<number | null>(null);
+  const amount = raw ?? suggested;
   if (!profile.loans.length && !profile.holdings.length) return null;
 
   const o = secondOpinion(profile, Math.max(1, amount));
@@ -27,6 +31,7 @@ export function SecondOpinion() {
             value={amount}
             inputMode="numeric"
             onChange={(e) => setAmount(Number(e.target.value.replace(/\D/g, "")) || 0)}
+            aria-label="Spare cash to decide about"
           />
         </div>
       }

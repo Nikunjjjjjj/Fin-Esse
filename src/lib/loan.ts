@@ -146,8 +146,8 @@ export interface PrepayResult {
   interestBefore: number;
   interestAfter: number;
   interestSaved: number;
-  /** Interest saved per unit of cash deployed — the comparable efficiency number. */
-  savedPerRupee: number;
+  /** Interest saved per unit of cash deployed -- the currency-agnostic efficiency number. */
+  interestSavedPerUnitDeployed: number;
   feasible: boolean;
   note: string;
 }
@@ -181,7 +181,7 @@ export function simulatePrepay(loan: Loan, lumpSum: number, extraMonthly = 0): P
     interestBefore: s.interestRemaining,
     interestAfter: round2(interestAfter),
     interestSaved,
-    savedPerRupee: cashDeployed > 0 ? round2((interestSaved / cashDeployed) * 100) / 100 : 0,
+    interestSavedPerUnitDeployed: cashDeployed > 0 ? round2((interestSaved / cashDeployed) * 100) / 100 : 0,
     feasible: applied <= s.outstanding,
     note:
       applied < lumpSum

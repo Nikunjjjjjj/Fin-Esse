@@ -46,7 +46,7 @@ describe("tool catalogue", () => {
 });
 
 describe("loan tools", () => {
-  it("adds a loan and reports it back", async () => {
+  it("proposes a loan rather than adding it, then adds it on approval", async () => {
     const add = await call("loan_add", {
       name: "Test home loan",
       principal: 5_000_000,
@@ -54,6 +54,12 @@ describe("loan tools", () => {
       termMonths: 240,
     });
     expect(add.data.loan.id).toBeTruthy();
+    expect(add.data.applied).toBe(false);
+
+    // Nothing exists yet -- the agent only asked.
+    expect((await call("loan_list")).data.loans ?? []).toHaveLength(0);
+
+    resolveProposal(getState().proposals[0].id, "approved");
     const list = await call("loan_list");
     expect(list.text).toContain("Test home loan");
     expect(list.data.loans).toHaveLength(1);
@@ -108,6 +114,63 @@ describe("human-in-the-loop proposals", () => {
     const r = await call("loan_propose_prepayment", { loanId: "loan_home", lumpSum: 5_000_000 });
     expect(r.data.exceedsCash).toBe(true);
     expect(r.text).toContain("Warning");
+  });
+});
+
+describe("every financial write passes the consent gate", () => {
+  // The claim is architectural, so it is tested as a property of the whole
+  // tool set rather than tool by tool: no write tool may reach the profile
+  // without a human, and adding a new one later must not quietly opt out.
+  const FINANCIAL_WRITES = [
+    ["loan_add", { name: "L", principal: 100000, annualRatePct: 9, termMonths: 24 }],
+    ["loan_remove", { loanId: "loan_car" }],
+    ["portfolio_add_holding", { symbol: "X", name: "X", assetClass: "equity", units: 1, price: 100 }],
+    ["portfolio_remove_holding", { holdingId: "h_gold" }],
+    ["portfolio_add_real_asset", { name: "Shed", value: 50000 }],
+    ["portfolio_update_price", { holdingId: "h_nifty", price: 999 }],
+    ["budget_set_income", { monthlyIncome: 12345 }],
+    ["budget_set_cash_reserve", { cashReserve: 4321 }],
+    ["budget_add_expense", { name: "Gym", amount: 2000 }],
+    ["budget_remove_expense", { expenseId: "e_life" }],
+    ["budget_add_goal", { name: "Trip", targetAmount: 100000, targetMonths: 12 }],
+    ["budget_remove_goal", { goalId: "g_edu" }],
+    ["loan_propose_prepayment", { loanId: "loan_home", lumpSum: 100000 }],
+    ["portfolio_propose_rebalance", { target: { equity: 60, debt: 40 } }],
+  ] as const;
+
+  it.each(FINANCIAL_WRITES)("%s cannot change the profile on its own", async (name, input) => {
+    loadDemoProfile();
+    const before = JSON.stringify(getState().profile);
+    const r = await call(name, input as Record<string, unknown>);
+    expect(r.isError).toBeFalsy();
+    expect(JSON.stringify(getState().profile)).toBe(before);
+    expect(getState().proposals.length).toBeGreaterThan(0);
+  });
+
+  it("applies the change once a human approves", async () => {
+    loadDemoProfile();
+    await call("budget_set_income", { monthlyIncome: 12345 });
+    resolveProposal(getState().proposals[0].id, "approved");
+    expect(getState().profile.budget.monthlyIncome).toBe(12345);
+  });
+
+  it("changes nothing when a human rejects", async () => {
+    loadDemoProfile();
+    const before = JSON.stringify(getState().profile);
+    await call("budget_set_income", { monthlyIncome: 12345 });
+    resolveProposal(getState().proposals[0].id, "rejected");
+    expect(JSON.stringify(getState().profile)).toBe(before);
+  });
+
+  it("applies writes directly inside a what-if branch, where the branch is the safety net", async () => {
+    loadDemoProfile();
+    await call("advisor_begin_whatif", { name: "Explore" });
+    const r = await call("budget_set_income", { monthlyIncome: 999 });
+    expect(r.data.applied).toBe(true);
+    expect(getState().profile.budget.monthlyIncome).toBe(999);
+    expect(getState().proposals).toHaveLength(0);
+    await call("advisor_end_whatif", { keep: false });
+    expect(getState().profile.budget.monthlyIncome).not.toBe(999);
   });
 });
 

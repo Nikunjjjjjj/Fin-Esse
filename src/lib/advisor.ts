@@ -440,7 +440,7 @@ export function recommendations(profile: Profile): Recommendation[] {
       priority: 1,
       title: `Clear "${expensive.name}" before anything else`,
       action: `Direct surplus cash at the ${expensive.annualRatePct}% balance of ${money(s.outstanding, profile.currency)}.`,
-      why: `At ${expensive.annualRatePct}% this debt costs far more than the ${profile.expectedPortfolioReturnPct}% the portfolio is assumed to earn. Every rupee against it is a guaranteed ${expensive.annualRatePct}% return.`,
+      why: `At ${expensive.annualRatePct}% this debt costs far more than the ${profile.expectedPortfolioReturnPct}% the portfolio is assumed to earn. Every unit of currency put against it earns a guaranteed ${expensive.annualRatePct}%, which no investment can promise.`,
       evidence: ["loan_list", "advisor_prepay_vs_invest"],
       impact: `Removes ${money(s.interestRemaining, profile.currency)} of scheduled interest and ${money(s.emi, profile.currency)}/mo of committed outflow.`,
     });

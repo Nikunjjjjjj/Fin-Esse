@@ -9,7 +9,7 @@ import {
   totalOutstanding,
 } from "../lib/loan";
 import { money, months as fmtMonths, round2 } from "../lib/money";
-import { addProposal, getProfile, uid, updateProfile } from "../store/store";
+import { getProfile, proposeOrApply, uid } from "../store/store";
 import { S, requireNumber, result, type ToolSpec } from "./helpers";
 
 const KINDS: LoanKind[] = ["home", "auto", "education", "personal", "credit_card", "other"];
@@ -77,11 +77,23 @@ export const loanTools: ToolSpec[] = [
         termMonths: Math.round(term),
         monthsPaid: Math.max(0, Math.round(Number(i.monthsPaid ?? 0))),
       };
-      updateProfile((p) => ({ ...p, loans: [...p.loans, loan] }));
       const s = snapshot(loan);
+      const outcome = proposeOrApply({
+        tool: "loan_add",
+        title: `Add the loan "${loan.name}"`,
+        summary: `Record a ${loan.annualRatePct}% ${loan.kind.replace("_", " ")} loan on the balance sheet.`,
+        effects: [
+          `Principal ${money(loan.principal)} over ${fmtMonths(loan.termMonths)} at ${loan.annualRatePct}%`,
+          `EMI ${money(s.emi)}, outstanding today ${money(s.outstanding)}`,
+          `Adds ${money(s.emi)}/mo to committed outflow`,
+        ],
+        apply: (p) => ({ ...p, loans: [...p.loans, loan] }),
+      });
       return result(
-        `Added "${loan.name}" (id ${loan.id}). EMI ${money(s.emi)}, outstanding ${money(s.outstanding)}, ${fmtMonths(s.monthsRemaining)} remaining.`,
-        { loan, snapshot: s },
+        outcome.applied
+          ? `Added "${loan.name}" (id ${loan.id}) to the what-if branch. EMI ${money(s.emi)}, outstanding ${money(s.outstanding)}, ${fmtMonths(s.monthsRemaining)} remaining.`
+          : `Proposed adding "${loan.name}" (EMI ${money(s.emi)}, outstanding ${money(s.outstanding)}). It is waiting for the user's approval in the app and has NOT been added yet — ask them to approve or reject the card.`,
+        { loan, snapshot: s, ...outcome },
       );
     },
   },
@@ -93,8 +105,24 @@ export const loanTools: ToolSpec[] = [
     touches: (i) => [String(i.loanId)],
     execute: (i) => {
       const loan = findLoan(String(i.loanId));
-      updateProfile((p) => ({ ...p, loans: p.loans.filter((l) => l.id !== loan.id) }));
-      return result(`Removed "${loan.name}".`, { removed: loan.id });
+      const s = snapshot(loan);
+      const outcome = proposeOrApply({
+        tool: "loan_remove",
+        title: `Remove the loan "${loan.name}"`,
+        summary: "Take this loan off the balance sheet entirely.",
+        effects: [
+          `Removes ${money(s.outstanding)} of outstanding debt`,
+          `Frees ${money(s.emi)}/mo of committed outflow`,
+          "Use this only if the loan was entered in error or is genuinely closed",
+        ],
+        apply: (p) => ({ ...p, loans: p.loans.filter((l) => l.id !== loan.id) }),
+      });
+      return result(
+        outcome.applied
+          ? `Removed "${loan.name}" from the what-if branch.`
+          : `Proposed removing "${loan.name}". Waiting for the user's approval — nothing has been removed yet.`,
+        { removed: loan.id, ...outcome },
+      );
     },
   },
   {
@@ -198,7 +226,7 @@ export const loanTools: ToolSpec[] = [
       const sim = simulatePrepay(loan, lump);
       const cash = getProfile().budget.cashReserve;
 
-      addProposal({
+      const outcome = proposeOrApply({
         tool: "loan_propose_prepayment",
         title: `Prepay ${money(sim.lumpSum)} into "${loan.name}"`,
         summary: String(i.reason ?? `Reduce the ${loan.annualRatePct}% balance on ${loan.name}.`),
@@ -227,9 +255,12 @@ export const loanTools: ToolSpec[] = [
       });
 
       const shortfall = sim.lumpSum - cash;
+      const warning = shortfall > 0 ? ` Warning: this exceeds the ${money(cash)} cash reserve by ${money(shortfall)}.` : "";
       return result(
-        `Proposed a ${money(sim.lumpSum)} prepayment on "${loan.name}". It is now waiting for the user's approval in the app -- it has NOT been applied yet. If approved it saves ${money(sim.interestSaved)} and ${fmtMonths(sim.monthsSaved)}.${shortfall > 0 ? ` Warning: this exceeds the ${money(cash)} cash reserve by ${money(shortfall)}.` : ""} Tell the user to approve or reject the card.`,
-        { proposed: true, simulation: sim, cashReserve: cash, exceedsCash: shortfall > 0 },
+        outcome.applied
+          ? `Applied a ${money(sim.lumpSum)} prepayment on "${loan.name}" inside the what-if branch, saving ${money(sim.interestSaved)} and ${fmtMonths(sim.monthsSaved)}.${warning}`
+          : `Proposed a ${money(sim.lumpSum)} prepayment on "${loan.name}". It is now waiting for the user's approval in the app -- it has NOT been applied yet. If approved it saves ${money(sim.interestSaved)} and ${fmtMonths(sim.monthsSaved)}.${warning} Tell the user to approve or reject the card.`,
+        { proposed: !outcome.applied, simulation: sim, cashReserve: cash, exceedsCash: shortfall > 0, ...outcome },
       );
     },
   },

@@ -8,6 +8,7 @@ import { Proposals } from "./components/Proposals";
 import { Recommendations } from "./components/Recommendations";
 import { Scenarios } from "./components/Scenarios";
 import { ToolInspector } from "./components/ToolInspector";
+import { CurrencyToggle } from "./components/CurrencyToggle";
 import { HandoffBanner, ShareButton } from "./components/Handoff";
 import { SecondOpinion } from "./components/SecondOpinion";
 import { Panel } from "./components/common";
@@ -16,18 +17,23 @@ import { decodeHandoff, readHandoffFromUrl } from "./lib/handoff";
 import { startWebMcp, watchForToolChanges } from "./webmcp/register";
 import { webmcpFlavour } from "./webmcp/shim";
 
-const PROMPTS = [
-  "Walk me through my finances — what's the state of things?",
-  "I've got ₹3,00,000 spare. Should I prepay a loan or invest it?",
-  "What happens to me if I lose my job for 9 months and the market crashes?",
-  "Open a what-if branch where I clear the credit card, then compare it to today.",
-  "Argue both sides: growth advisor vs preservation advisor, on ₹3,00,000 spare.",
-  "Package my position into a link I can send my partner's agent.",
-];
+/** Example asks, denominated in whichever currency the profile is using. */
+function promptsFor(currency: string): string[] {
+  const spare = currency === "USD" ? "$10,000" : "₹3,00,000";
+  return [
+    "Walk me through my finances — what's the state of things?",
+    `I've got ${spare} spare. Should I prepay a loan or invest it?`,
+    "What happens to me if I lose my job for 9 months and the market crashes?",
+    "Open a what-if branch where I clear the credit card, then compare it to today.",
+    `Argue both sides: growth advisor vs preservation advisor, on ${spare} spare.`,
+    "Package my position into a link I can send my partner's agent.",
+  ];
+}
 
 export default function App() {
   const status = useSelector((s) => s.webmcpStatus);
   const scenarioMode = useSelector((s) => s.scenarioMode);
+  const currency = useSelector((s) => s.profile.currency);
   const hasData = useSelector(
     (s) => s.profile.loans.length + s.profile.holdings.length + s.profile.goals.length > 0,
   );
@@ -71,8 +77,9 @@ export default function App() {
           <span className="tag">financial planning you and an agent do together</span>
         </div>
         <span className="spacer" />
+        <CurrencyToggle />
         <ShareButton />
-        <button className="btn sm" onClick={loadDemoProfile}>Load sample profile</button>
+        <button className="btn sm" onClick={() => loadDemoProfile()}>Load sample profile</button>
         <button className="btn sm ghost" onClick={resetProfile}>Clear</button>
         <span className={status === "ready" ? "status ready" : "status"}>
           <span className="dot" />
@@ -102,7 +109,7 @@ export default function App() {
                 below and everything computes live. Opened inside an AI browser, the same capabilities are also
                 exposed as WebMCP tools, so an agent can reason across all of it with you.
               </p>
-              <button className="btn primary" onClick={loadDemoProfile}>Load a sample profile</button>
+              <button className="btn primary" onClick={() => loadDemoProfile()}>Load a sample profile</button>
             </Panel>
           )}
           <div className="grid2">
@@ -122,7 +129,7 @@ export default function App() {
           <AgentTrail />
           <Panel title="Try asking the agent">
             <div className="prompts">
-              {PROMPTS.map((p) => (
+              {promptsFor(currency).map((p) => (
                 <button
                   className="prompt"
                   key={p}

@@ -1,24 +1,37 @@
+import type { CurrencyCode } from "../lib/money";
 import type { Profile } from "../types";
 
-export function emptyProfile(): Profile {
+export function emptyProfile(currency: CurrencyCode = "INR"): Profile {
   return {
-    currency: "INR",
+    currency,
+    isSample: false,
     loans: [],
     holdings: [],
     realAssets: [],
     budget: { monthlyIncome: 0, expenses: [], cashReserve: 0 },
     goals: [],
-    expectedPortfolioReturnPct: 11,
+    expectedPortfolioReturnPct: currency === "USD" ? 8 : 11,
   };
+}
+
+export function demoProfile(currency: CurrencyCode = "INR"): Profile {
+  return currency === "USD" ? demoProfileUSD() : demoProfileINR();
 }
 
 /**
  * A deliberately realistic mid-career profile: leveraged, diversified-ish,
  * and with a genuine prepay-vs-invest tension the advisor tools can chew on.
+ *
+ * The three loan rates are the point. One sits far above any plausible market
+ * return, one far below, and one close enough to the assumed return that the
+ * answer genuinely depends on which assumptions you accept. A sample where
+ * every loan pointed the same way would make the advisor look clairvoyant
+ * while proving nothing.
  */
-export function demoProfile(): Profile {
+function demoProfileINR(): Profile {
   return {
     currency: "INR",
+    isSample: true,
     expectedPortfolioReturnPct: 11,
     loans: [
       {
@@ -73,6 +86,72 @@ export function demoProfile(): Profile {
     goals: [
       { id: "g_edu", name: "Daughter's undergrad fund", targetAmount: 4_000_000, targetMonths: 120, savedSoFar: 620_000 },
       { id: "g_emg", name: "12-month emergency fund", targetAmount: 1_800_000, targetMonths: 24, savedSoFar: 900_000 },
+    ],
+  };
+}
+
+/**
+ * The same financial shape in US terms, so the sample reads instantly to
+ * someone who does not think in lakhs. Rates are set to preserve the tension:
+ * a card far above market returns, a mortgage clearly below, and an auto loan
+ * close enough to the 8% assumption to be genuinely arguable.
+ */
+function demoProfileUSD(): Profile {
+  return {
+    currency: "USD",
+    isSample: true,
+    expectedPortfolioReturnPct: 8,
+    realAssets: [{ id: "ra_house", name: "Maple Street house (primary residence)", value: 520_000 }],
+    loans: [
+      {
+        id: "loan_home",
+        name: "Mortgage — Maple Street",
+        kind: "home",
+        principal: 380_000,
+        annualRatePct: 6.4,
+        termMonths: 360,
+        monthsPaid: 41,
+      },
+      {
+        id: "loan_car",
+        name: "Auto loan — Outback",
+        kind: "auto",
+        principal: 34_000,
+        annualRatePct: 8.2,
+        termMonths: 60,
+        monthsPaid: 18,
+      },
+      {
+        id: "loan_card",
+        name: "Credit card revolve",
+        kind: "credit_card",
+        principal: 14_500,
+        annualRatePct: 24.9,
+        termMonths: 24,
+        monthsPaid: 3,
+      },
+    ],
+    holdings: [
+      { id: "h_vti", symbol: "VTI", name: "Total US market ETF", assetClass: "equity", units: 420, price: 268 },
+      { id: "h_vxus", symbol: "VXUS", name: "Total international ETF", assetClass: "equity", units: 300, price: 61 },
+      { id: "h_bnd", symbol: "BND", name: "Total bond market ETF", assetClass: "debt", units: 480, price: 73 },
+      { id: "h_gld", symbol: "GLD", name: "Gold ETF", assetClass: "gold", units: 90, price: 198 },
+      { id: "h_btc", symbol: "BTC", name: "Bitcoin", assetClass: "crypto", units: 0.35, price: 68_000 },
+    ],
+    budget: {
+      monthlyIncome: 11_400,
+      cashReserve: 21_000,
+      expenses: [
+        { id: "e_food", name: "Groceries & household", amount: 1_150, essential: true },
+        { id: "e_util", name: "Utilities & insurance", amount: 740, essential: true },
+        { id: "e_care", name: "Childcare", amount: 1_480, essential: true },
+        { id: "e_health", name: "Health premiums", amount: 520, essential: true },
+        { id: "e_life", name: "Dining, travel, subscriptions", amount: 890, essential: false },
+      ],
+    },
+    goals: [
+      { id: "g_edu", name: "College fund", targetAmount: 180_000, targetMonths: 144, savedSoFar: 26_000 },
+      { id: "g_emg", name: "6-month emergency fund", targetAmount: 42_000, targetMonths: 24, savedSoFar: 21_000 },
     ],
   };
 }

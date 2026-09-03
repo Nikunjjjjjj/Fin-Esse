@@ -24,7 +24,10 @@ taking real, visible, multi-step actions on the same state you are looking at.
 | **Any browser** | Everything works without an agent — the tools are simply not exposed. |
 
 A sample profile loads automatically so there is something to talk about.
-Append `?empty=1` for a blank slate.
+Append `?empty=1` for a blank slate. The **₹ INR / $ USD** toggle switches
+between two samples of the same financial shape — the rates are set so that in
+both, one loan sits far above any plausible market return, one clearly below,
+and one close enough to be genuinely arguable.
 
 ### Ask the agent
 
@@ -54,11 +57,24 @@ Four things push past a proof of concept:
 
 ### 1. Agents propose; humans decide
 
-Consequential tools **cannot mutate state**. `loan_propose_prepayment` and
-`portfolio_propose_rebalance` queue a proposal carrying its own `apply()`
+**No agent-initiated change to your financial data can reach the profile
+without a person approving it.** Every one of the fourteen write tools — add a
+loan, remove a holding, reprice an asset, set income, prepay, rebalance —
+routes through a single gate that queues a proposal carrying its own `apply()`
 closure and full before/after effects. The profile changes only when a person
-clicks **Approve** in the app. Rejection leaves the profile byte-identical.
-Both directions are pinned by tests.
+clicks **Approve**. Rejection leaves it byte-identical.
+
+This is enforced structurally, not by prompting, and it is tested as a
+property of the whole tool set rather than tool by tool, so a write tool added
+later cannot quietly opt out.
+
+The one exception is deliberate: **inside a what-if branch, writes apply
+immediately**, because the branch is itself the safety mechanism — everything
+in it is discarded unless you explicitly keep it. Asking consent for each step
+of a throwaway exploration would be ceremony without protection.
+
+Changing a planning *assumption* (`budget_set_expected_return`) is also
+ungated: nothing you own or owe moves, only the projection.
 
 This is the difference between an agent that can act on your money and an
 agent that can *ask* to.
@@ -103,17 +119,19 @@ link degrades into a boring profile rather than a broken app.
 42 tools in four groups. Prefixes are organisational — there is one agent.
 
 ### `loan_*`
-`list` · `add` · `remove` · `emi_calculator` · `amortisation` ·
-`simulate_prepayment` · `propose_prepayment` · `compare_offers`
+`list` · `add`* · `remove`* · `emi_calculator` · `amortisation` ·
+`simulate_prepayment` · `propose_prepayment`* · `compare_offers`
+
+_* requires human approval before it changes anything._
 
 ### `portfolio_*`
-`list` · `add_holding` · `remove_holding` · `add_real_asset` · `allocation` ·
-`plan_rebalance` · `propose_rebalance` · `simulate_market_event` ·
-`update_price`
+`list` · `add_holding`* · `remove_holding`* · `add_real_asset`* ·
+`allocation` · `plan_rebalance` · `propose_rebalance`* ·
+`simulate_market_event` · `update_price`*
 
 ### `budget_*`
-`summary` · `set_income` · `set_cash_reserve` · `add_expense` ·
-`remove_expense` · `add_goal` · `remove_goal` · `goal_feasibility` ·
+`summary` · `set_income`* · `set_cash_reserve`* · `add_expense`* ·
+`remove_expense`* · `add_goal`* · `remove_goal`* · `goal_feasibility` ·
 `set_expected_return`
 
 ### `advisor_*` — cross-domain
@@ -169,7 +187,7 @@ header names which one is live.
 ```bash
 npm install
 npm run dev        # http://localhost:5173
-npm test           # 68 tests
+npm test           # 94 tests
 npm run build
 ```
 

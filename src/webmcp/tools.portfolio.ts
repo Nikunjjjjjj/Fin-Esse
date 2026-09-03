@@ -15,7 +15,7 @@ import {
   type ShockName,
 } from "../lib/portfolio";
 import { money, pct, round2 } from "../lib/money";
-import { addProposal, getProfile, uid, updateProfile } from "../store/store";
+import { getProfile, proposeOrApply, uid } from "../store/store";
 import { S, requireNumber, result, type ToolSpec } from "./helpers";
 
 const SHOCK_NAMES = Object.keys(SHOCKS) as ShockName[];
@@ -81,11 +81,22 @@ export const portfolioTools: ToolSpec[] = [
         units,
         price,
       };
-      updateProfile((p) => ({ ...p, holdings: [...p.holdings, h] }));
-      return result(`Added ${h.symbol} "${h.name}" worth ${money(holdingValue(h))} (id ${h.id}).`, {
-        holding: h,
-        value: holdingValue(h),
+      const outcome = proposeOrApply({
+        tool: "portfolio_add_holding",
+        title: `Add ${h.symbol} to the portfolio`,
+        summary: `Record ${h.units} units of "${h.name}" as ${ASSET_META[h.assetClass].label}.`,
+        effects: [
+          `Position worth ${money(holdingValue(h))} at ${money(h.price)} per unit`,
+          `Portfolio ${money(portfolioValue(getProfile().holdings))} -> ${money(portfolioValue([...getProfile().holdings, h]))}`,
+        ],
+        apply: (p) => ({ ...p, holdings: [...p.holdings, h] }),
       });
+      return result(
+        outcome.applied
+          ? `Added ${h.symbol} "${h.name}" worth ${money(holdingValue(h))} (id ${h.id}) to the what-if branch.`
+          : `Proposed adding ${h.symbol} "${h.name}" worth ${money(holdingValue(h))}. Waiting for the user's approval — it has not been added yet.`,
+        { holding: h, value: holdingValue(h), ...outcome },
+      );
     },
   },
   {
@@ -97,8 +108,22 @@ export const portfolioTools: ToolSpec[] = [
     touches: (i) => [String(i.holdingId)],
     execute: (i) => {
       const h = findHolding(String(i.holdingId));
-      updateProfile((p) => ({ ...p, holdings: p.holdings.filter((x) => x.id !== h.id) }));
-      return result(`Removed ${h.symbol} "${h.name}".`, { removed: h.id });
+      const outcome = proposeOrApply({
+        tool: "portfolio_remove_holding",
+        title: `Remove ${h.symbol} from the portfolio`,
+        summary: `Take "${h.name}" off the balance sheet.`,
+        effects: [
+          `Removes a ${money(holdingValue(h))} position`,
+          `Portfolio ${money(portfolioValue(getProfile().holdings))} -> ${money(portfolioValue(getProfile().holdings.filter((x) => x.id !== h.id)))}`,
+        ],
+        apply: (p) => ({ ...p, holdings: p.holdings.filter((x) => x.id !== h.id) }),
+      });
+      return result(
+        outcome.applied
+          ? `Removed ${h.symbol} "${h.name}" from the what-if branch.`
+          : `Proposed removing ${h.symbol} "${h.name}". Waiting for the user's approval — nothing has been removed yet.`,
+        { removed: h.id, ...outcome },
+      );
     },
   },
   {
@@ -182,7 +207,7 @@ export const portfolioTools: ToolSpec[] = [
       const riskBefore = riskScore(p.holdings);
       const riskAfter = riskScore(applyRebalance(p.holdings, plan));
 
-      addProposal({
+      const outcome = proposeOrApply({
         tool: "portfolio_propose_rebalance",
         title: `Rebalance the portfolio (${money(plan.turnover)} of trades)`,
         summary: String(i.reason ?? "Move the portfolio to the requested target allocation."),
@@ -196,8 +221,10 @@ export const portfolioTools: ToolSpec[] = [
       });
 
       return result(
-        `Proposed a rebalance moving ${money(plan.turnover)} and taking the risk score from ${riskBefore} to ${riskAfter}. It is waiting for the user's approval in the app -- nothing has changed yet. Tell the user to approve or reject the card.`,
-        { proposed: true, plan, riskBefore, riskAfter },
+        outcome.applied
+          ? `Rebalanced inside the what-if branch, moving ${money(plan.turnover)} and taking the risk score from ${riskBefore} to ${riskAfter}.`
+          : `Proposed a rebalance moving ${money(plan.turnover)} and taking the risk score from ${riskBefore} to ${riskAfter}. It is waiting for the user's approval in the app -- nothing has changed yet. Tell the user to approve or reject the card.`,
+        { proposed: !outcome.applied, plan, riskBefore, riskAfter, ...outcome },
       );
     },
   },
@@ -239,10 +266,21 @@ export const portfolioTools: ToolSpec[] = [
       const value = requireNumber(i.value, "value");
       if (value <= 0) throw new Error("Value must be positive.");
       const asset = { id: uid("ra"), name: String(i.name), value };
-      updateProfile((p) => ({ ...p, realAssets: [...p.realAssets, asset] }));
+      const outcome = proposeOrApply({
+        tool: "portfolio_add_real_asset",
+        title: `Record "${asset.name}" as a real asset`,
+        summary: "Add a non-investable asset such as a home to the balance sheet.",
+        effects: [
+          `Adds ${money(value)} to total assets and net worth`,
+          "Excluded from allocation, rebalancing and concentration risk",
+        ],
+        apply: (p) => ({ ...p, realAssets: [...p.realAssets, asset] }),
+      });
       return result(
-        `Recorded "${asset.name}" at ${money(value)}. It now counts towards net worth but is excluded from portfolio allocation and rebalancing.`,
-        { realAsset: asset },
+        outcome.applied
+          ? `Recorded "${asset.name}" at ${money(value)} in the what-if branch.`
+          : `Proposed recording "${asset.name}" at ${money(value)}. Waiting for the user's approval.`,
+        { realAsset: asset, ...outcome },
       );
     },
   },
@@ -260,14 +298,25 @@ export const portfolioTools: ToolSpec[] = [
       const price = requireNumber(i.price, "price");
       if (price <= 0) throw new Error("Price must be positive.");
       const before = holdingValue(h);
-      updateProfile((p) => ({
-        ...p,
-        holdings: p.holdings.map((x) => (x.id === h.id ? { ...x, price } : x)),
-      }));
       const after = round2(h.units * price);
+      const outcome = proposeOrApply({
+        tool: "portfolio_update_price",
+        title: `Reprice ${h.symbol} to ${money(price)}`,
+        summary: `Update the quoted price of "${h.name}".`,
+        effects: [
+          `Price ${money(h.price)} -> ${money(price)}`,
+          `Position ${money(before)} -> ${money(after)}`,
+        ],
+        apply: (p) => ({
+          ...p,
+          holdings: p.holdings.map((x) => (x.id === h.id ? { ...x, price } : x)),
+        }),
+      });
       return result(
-        `${h.symbol} repriced from ${money(h.price)} to ${money(price)}: position ${money(before)} -> ${money(after)}.`,
-        { holdingId: h.id, before, after },
+        outcome.applied
+          ? `${h.symbol} repriced from ${money(h.price)} to ${money(price)} in the what-if branch: position ${money(before)} -> ${money(after)}.`
+          : `Proposed repricing ${h.symbol} from ${money(h.price)} to ${money(price)} (position ${money(before)} -> ${money(after)}). Waiting for the user's approval.`,
+        { holdingId: h.id, before, after, ...outcome },
       );
     },
   },
