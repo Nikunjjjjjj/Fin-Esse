@@ -1,0 +1,76 @@
+{
+ "artboards": [
+  {
+   "file": "Main.dc.html",
+   "x": 0,
+   "y": 0,
+   "w": 1280,
+   "h": 880,
+   "title": "A — Instrument"
+  },
+  {
+   "file": "PrivateBank.dc.html",
+   "x": 1400,
+   "y": 0,
+   "w": 1280,
+   "h": 880,
+   "title": "B — Private Bank"
+  },
+  {
+   "file": "Broadsheet.dc.html",
+   "x": 2800,
+   "y": 0,
+   "w": 1280,
+   "h": 880,
+   "title": "C — Broadsheet"
+  },
+  {
+   "file": "Atelier.dc.html",
+   "x": 4200,
+   "y": 0,
+   "w": 1280,
+   "h": 880,
+   "title": "D — Atelier"
+  }
+ ],
+ "annotations": [
+  {
+   "id": "brief",
+   "x": 0,
+   "y": -210,
+   "w": 720,
+   "text": "Four mature directions, same screen. Pick one and I build the remaining five pages in it.\n\nAll four make the same UX cut: the old Overview stacked fifteen blocks at equal weight, these show five — net worth, four vitals, one decision, one agent log. Labels are plain English: 'Free each month', not 'Monthly surplus'."
+  },
+  {
+   "id": "a",
+   "x": 0,
+   "y": 920,
+   "w": 360,
+   "text": "A — INSTRUMENT\nSwiss precision. Cool neutrals, hairline rules, one slate-blue accent, tight grid. Archivo throughout, tabular figures.\n\nMost credible, least decorated. Risk: can read as austere."
+  },
+  {
+   "id": "b",
+   "x": 1400,
+   "y": 920,
+   "w": 360,
+   "text": "B — PRIVATE BANK\nDark ink, warm off-white type, bronze accent, Newsreader serif for every figure. Jost for UI.\n\nThe most expensive-looking. Risk: dark again, and serif numerals are less scannable than tabular sans."
+  },
+  {
+   "id": "c",
+   "x": 2800,
+   "y": 920,
+   "w": 360,
+   "text": "C — BROADSHEET\nEditorial. Bodoni Moda numerals, heavy top rule, dateline, ranked items. Libre Franklin body.\n\nStrongest personality, and it fits an app that makes arguments. Risk: the didone is fashion-sensitive."
+  },
+  {
+   "id": "d",
+   "x": 4200,
+   "y": 920,
+   "w": 360,
+   "text": "D — ATELIER\nSoft depth. Rounded cards, gentle shadows, deep green accent, Manrope. Closest to a modern product.\n\nSafest and most familiar. Risk: familiar is also forgettable — closest to generic SaaS."
+  }
+ ],
+ "launch": {
+  "view": "canvas"
+ }
+}

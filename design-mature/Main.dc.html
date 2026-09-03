@@ -1,0 +1,106 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&amp;display=swap">
+  <style>
+    body { margin:0; background:#FCFCFD; color:#14161A;
+      font-family:'Archivo','Helvetica Neue',Arial,sans-serif;
+      -webkit-font-smoothing:antialiased; }
+    * { box-sizing:border-box; }
+    a { color:#38566F; text-decoration:none; } a:hover { color:#14161A; }
+    .n { font-variant-numeric:tabular-nums; letter-spacing:-.02em; }
+    .lbl { font-size:10.5px; letter-spacing:.13em; text-transform:uppercase;
+      color:#98A0AC; font-weight:600; }
+  </style>
+</helmet>
+<div style="width:1280px; min-height:880px; background:#FCFCFD; display:flex; flex-direction:column;">
+  <div style="display:flex; align-items:center; gap:30px; padding:0 40px; height:60px; border-bottom:1px solid #E4E7EC; background:#FFFFFF;">
+    <div style="font-size:16px; font-weight:700; letter-spacing:-.02em;">Fin<span style="color:#38566F;">·</span>Esse</div>
+    <div style="display:flex; gap:26px;">
+      <div style="font-size:13.5px; color:#14161A; font-weight:600; height:60px; line-height:60px; box-shadow:inset 0 -2px 0 #38566F;">Overview</div><div style="font-size:13.5px; color:#666E7A; font-weight:400; height:60px; line-height:60px; box-shadow:none;">Debt</div><div style="font-size:13.5px; color:#666E7A; font-weight:400; height:60px; line-height:60px; box-shadow:none;">Investments</div><div style="font-size:13.5px; color:#666E7A; font-weight:400; height:60px; line-height:60px; box-shadow:none;">Cashflow</div><div style="font-size:13.5px; color:#666E7A; font-weight:400; height:60px; line-height:60px; box-shadow:none;">Advice</div>
+    </div>
+    <div style="flex:1;"></div>
+    <div style="display:flex; align-items:center; gap:7px; font-size:12.5px; color:#666E7A;">
+      <span style="width:6px;height:6px;border-radius:50%;background:#38566F;"></span>Agent connected
+    </div>
+  </div>
+
+  <div style="display:grid; grid-template-columns:1fr 380px; flex:1;">
+    <div style="padding:40px; border-right:1px solid #E4E7EC;">
+      <div class="lbl">Everything you own, minus everything you owe</div>
+      <div class="n" style="font-size:64px; font-weight:600; line-height:1; margin-top:14px;">₹48,19,000</div>
+      <div style="font-size:14px; color:#666E7A; margin-top:10px;">₹1.20 Cr owned · ₹71.69 L owed</div>
+
+      <div style="display:flex; height:4px; margin-top:32px; gap:2px;">
+        <div style="width:79%; background:#38566F;"></div>
+        <div style="width:13%; background:#8FA6B8;"></div>
+        <div style="width:8%; background:#E4E7EC;"></div>
+      </div>
+      <div style="display:flex; gap:26px; margin-top:12px; font-size:12.5px; color:#666E7A;">
+        <span>Home ₹95 L</span><span>Invested ₹15.9 L</span><span>Cash ₹9 L</span>
+      </div>
+
+      <div style="display:grid; grid-template-columns:repeat(4,1fr); margin:44px -22px 0; border-top:1px solid #E4E7EC; border-bottom:1px solid #E4E7EC;">
+        <div style="padding:20px 22px; border-right:1px solid #E4E7EC;">
+        <div class="lbl">Free each month</div>
+        <div class="n" style="font-size:27px; font-weight:600; margin-top:9px; color:#14161A;">₹70,215</div>
+        <div style="font-size:12px; color:#666E7A; margin-top:5px;">after everything is paid</div>
+      </div>
+        <div style="padding:20px 22px; border-right:1px solid #E4E7EC;">
+        <div class="lbl">Safety net</div>
+        <div class="n" style="font-size:27px; font-weight:600; margin-top:9px; color:#A6402C;">4.9 mo</div>
+        <div style="font-size:12px; color:#666E7A; margin-top:5px;">aim for six</div>
+      </div>
+        <div style="padding:20px 22px; border-right:1px solid #E4E7EC;">
+        <div class="lbl">Goes to loans</div>
+        <div class="n" style="font-size:27px; font-weight:600; margin-top:9px; color:#14161A;">32.6%</div>
+        <div style="font-size:12px; color:#666E7A; margin-top:5px;">of what you earn</div>
+      </div>
+        <div style="padding:20px 22px; border-right:1px solid #E4E7EC;">
+        <div class="lbl">Overall health</div>
+        <div class="n" style="font-size:27px; font-weight:600; margin-top:9px; color:#14161A;">47/100</div>
+        <div style="font-size:12px; color:#666E7A; margin-top:5px;">holding up</div>
+      </div>
+      </div>
+
+      <div style="margin-top:44px;">
+        <div class="lbl">Do this first</div>
+        <div style="font-size:19px; font-weight:600; margin-top:12px; letter-spacing:-.01em;">Clear the credit card before anything else</div>
+        <div style="font-size:14px; color:#666E7A; margin-top:8px; max-width:58ch; line-height:1.6;">It charges 38% a year — more than three times what your investments are assumed to earn. Every rupee against it is a guaranteed 38% return, which no investment can promise.</div>
+      </div>
+    </div>
+
+    <div style="padding:32px 28px; display:flex; flex-direction:column; gap:30px; background:#FFFFFF;">
+      <div>
+        <div class="lbl" style="color:#A6402C;">Needs your approval</div>
+        <div style="border:1px solid #E4E7EC; border-top:2px solid #A6402C; padding:18px; margin-top:12px;">
+          <div style="font-size:15.5px; font-weight:600;">Pay ₹1.64 L into the credit card</div>
+          <div style="font-size:13px; color:#666E7A; margin-top:6px; line-height:1.55;">Saves ₹63,080 in interest and frees ₹10,820 a month.</div>
+          <div class="n" style="margin-top:14px; font-size:13px; display:flex; flex-direction:column; gap:7px;">
+            <div style="display:flex; justify-content:space-between; padding-bottom:7px; border-bottom:1px solid #E4E7EC;"><span style="color:#666E7A;">Card</span><span>₹1.64 L → ₹0</span></div>
+            <div style="display:flex; justify-content:space-between;"><span style="color:#666E7A;">Cash</span><span>₹9 L → ₹7.36 L</span></div>
+          </div>
+          <div style="display:flex; gap:8px; margin-top:18px;">
+            <div style="flex:1; text-align:center; background:#14161A; color:#FFFFFF; padding:9px; font-size:13.5px; font-weight:600;">Approve</div>
+            <div style="flex:1; text-align:center; border:1px solid #E4E7EC; padding:9px; font-size:13.5px; font-weight:600;">Decline</div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="lbl">Agent activity</div>
+        <div style="margin-top:12px; display:flex; flex-direction:column;">
+          <div style="display:flex; gap:12px; padding:11px 0; border-bottom:1px solid #E4E7EC; font-size:13px;"><span style="color:#A6402C; font-weight:600; min-width:62px; font-size:11px; letter-spacing:.06em; text-transform:uppercase;">Asked</span><span style="color:#666E7A;">to clear the card</span></div><div style="display:flex; gap:12px; padding:11px 0; border-bottom:1px solid #E4E7EC; font-size:13px;"><span style="color:#38566F; font-weight:600; min-width:62px; font-size:11px; letter-spacing:.06em; text-transform:uppercase;">Ran</span><span style="color:#666E7A;">prepay vs invest, ₹3 L</span></div><div style="display:flex; gap:12px; padding:11px 0; border-bottom:1px solid #E4E7EC; font-size:13px;"><span style="color:#98A0AC; font-weight:600; min-width:62px; font-size:11px; letter-spacing:.06em; text-transform:uppercase;">Read</span><span style="color:#666E7A;">loans, budget, portfolio</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>
