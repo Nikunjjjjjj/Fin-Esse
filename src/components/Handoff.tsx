@@ -25,7 +25,7 @@ export function ShareButton() {
   if (empty) return null;
   return (
     <button className="btn sm" onClick={share} title="Copy a link that carries this whole position">
-      {state === "copied" ? "✓ Link copied" : state === "failed" ? "Copy failed" : "Share position"}
+      {state === "copied" ? "Link copied" : state === "failed" ? "Copy failed" : "Share"}
     </button>
   );
 }
@@ -34,13 +34,13 @@ export function HandoffBanner() {
   const handoff = useSelector((s) => s.handoff);
   if (!handoff) return null;
   return (
-    <div className="scenario-banner" style={{ background: "linear-gradient(90deg, #0d2b3a, #0a1f2b)", borderColor: "#155b7a", color: "#cbeeff" }}>
-      <strong>Shared position from {handoff.from}</strong>
-      {handoff.note && <span>— “{handoff.note}”</span>}
-      <span style={{ color: "#7fb8d0" }}>
-        You are reasoning on their numbers. Nothing you do here reaches them.
+    <div className="banner share">
+      <strong style={{ fontWeight: 400 }}>Shared position from {handoff.from}</strong>
+      {handoff.note && <span>“{handoff.note}”</span>}
+      <span style={{ color: "var(--muted)" }}>
+        You are reading their numbers. Nothing you do here reaches them.
       </span>
-      <span className="spacer" />
+      <span style={{ flex: 1 }} />
       <button className="btn sm" onClick={dismissHandoff}>Dismiss</button>
     </div>
   );

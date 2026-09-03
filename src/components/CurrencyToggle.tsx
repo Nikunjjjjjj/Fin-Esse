@@ -8,17 +8,18 @@ export function CurrencyToggle() {
   const isSample = useSelector((s) => s.profile.isSample);
 
   return (
-    <div className="seg" role="group" aria-label="Display currency">
-      {CODES.map((code) => (
+    <div style={{ display: "inline-flex", border: "1px solid var(--edge)" }} role="group" aria-label="Display currency">
+      {CODES.map((code, i) => (
         <button
           key={code}
-          className={currency === code ? "on" : ""}
           onClick={() => setCurrency(code)}
-          title={
-            isSample
-              ? `Show the ${CURRENCIES[code].label} sample profile`
-              : `Format your figures in ${CURRENCIES[code].label}`
-          }
+          title={isSample ? `Show the ${CURRENCIES[code].label} sample` : `Format figures in ${CURRENCIES[code].label}`}
+          style={{
+            padding: "5px 11px", fontSize: 12, letterSpacing: ".04em",
+            borderLeft: i ? "1px solid var(--edge)" : undefined,
+            background: currency === code ? "var(--raise)" : "transparent",
+            color: currency === code ? "var(--gold)" : "var(--muted)",
+          }}
         >
           {CURRENCIES[code].symbol} {code}
         </button>
